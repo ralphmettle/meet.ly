@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block stylesheet %}
-<link rel = 'stylesheet' href = '{{ url_for("static", filename = "css/login.css")}}'>
+<link rel = 'stylesheet' href = '{{ url_for("static", filename = "css/auth.css")}}'>
 {% endblock %}
 
 {% block head %}
@@ -10,6 +10,9 @@
 
 {% block body%}
 <div class = 'login-container'>
+    <div id='error-banner' class='error-banner' style='display: none;'>
+        <p>Not a valid email address.</p>
+    </div>
     <div class = 'form-container'>
         <form action = '{{ url_for("register") }}' method = 'post'>
             <div class = 'header-div'>
@@ -17,11 +20,12 @@
             </div>
             <div class = 'input-div'>
                 <div class = 'form-group username-div'>
-                    <input type = 'username' id = 'username' name = 'username' placeholder='Username' required>
+                    <input type = 'text' id = 'username' name = 'username' placeholder='Username' required>
                 </div>
                 <div class = 'form-group email-div'>
-                    <input type = 'email' id = 'email' name = 'email' placeholder='Email Address' required>
+                    <input type = 'text' id = 'email' name = 'email' placeholder='Email Address' required>
                 </div>
+                <script src = '{{ url_for("static", filename = "scripts/register_inputChecker.js")}}'></script>
                 <div class = 'form-group password-div'>
                     <input type = 'password' id = 'password' name = 'password' placeholder='Password' required>
                     <input type = 'password' id = 'confirm_password' name = 'confirm_password' placeholder='Confirm Password' required>

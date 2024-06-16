@@ -14,6 +14,37 @@ body {
     margin: 0;
     padding: 0;
 }
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0.5s forwards;
+}
+
+.error-banner {
+    position: absolute;
+    top: 150px;
+    margin: auto;
+    color: white;
+    background-color: rgb(224, 0, 30);
+    text-align: center;
+    padding: 5px;
+    border-radius: 10px;
+    width: 40%;
+    box-shadow: 0 0px 10px rgba(0,0,0,0.2);
+    display: none
+}
 
 /* login-container encompasses the whole viewport */
 .login-container {
@@ -45,7 +76,7 @@ body {
     color: var(--text-color-dark);
     font-size: 200%;
     font-weight: extra-bold;
-    margin-top: 50px;
+    margin-top: 30px;
     margin-bottom: 0px;
 }
 
@@ -70,8 +101,7 @@ body {
 }
 
 /* Styling for text input boxes */
-input[type='username'],
-input[type='email'],
+
 input[type='text'],
 input[type='password'] {
     width: 100%;
@@ -80,10 +110,7 @@ input[type='password'] {
     border-radius: 7.5px;
     box-sizing: border-box;
     font-size: 100%;
-    color: var(--text-color)
-}
-
-input[type='password'] {
+    color: var(--text-color);
     margin-top: 20px;
 }
 
