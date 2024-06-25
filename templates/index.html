@@ -6,5 +6,21 @@
 
 {% block body%}
 <h1>Home</h1>
-<p>Welcome to the home page!</p>
+
+    {% if current_user.is_authenticated %}
+        {% if current_user.role == 'dev_test' %}
+            <h2>Hello, {{current_user.username}}.</h2>
+            <p>{{current_user}}</p>
+        {% else %}
+            <h2>Hello, {{current_user.username}}.</h2>
+        {% endif %}
+    {% else %}
+        <h2>Welcome to the home page!</h2>
+        <h3>No user logged in.</h3>
+    {% endif %}
+
+    <a href="{{url_for('login')}}">Login</a>
+    <a href="{{url_for('register')}}">Register</a>
+    <a href="{{url_for('logout')}}">Logout</a>
+
 {% endblock %}

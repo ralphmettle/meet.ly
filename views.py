@@ -1,4 +1,5 @@
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
+from flask_login import login_user, logout_user, current_user
 from models import User
 
 def config_views(app, db, bcrypt):
@@ -6,11 +7,6 @@ def config_views(app, db, bcrypt):
     @app.route('/')
     def index():
         return render_template('index.html')
-
-    '''
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.query.get(user_id)'''
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -32,10 +28,16 @@ def config_views(app, db, bcrypt):
             
             # Check if the user exists in the database and the password is correct
             if user is not None:
-                if bcrypt.check_password_hash(user.password, password): 
-                    return f'User {user.username} logged in successfully.'
+                if bcrypt.check_password_hash(user.password, password):
+                    login_user(user)
+                    return redirect(url_for('index'))
             else:
                 return f"Incorrect username or password.\nCredentials: {username}, {email}, {password}"
+            
+    @app.route('/logout')
+    def logout():
+        logout_user()
+        return redirect(url_for('index'))
 
     @app.route('/register', methods=['GET', 'POST'])
     def register():
@@ -57,8 +59,7 @@ def config_views(app, db, bcrypt):
 
             create_user_in_db(username, email, password)
 
-        
-        return 'User registered successfully. \nDetails:\nusername: {username}\nemail: {email}'
+        return redirect(url_for('login'))
 
     @app.route('/forgot-password')
     def forgot_password():
