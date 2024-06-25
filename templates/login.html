@@ -9,33 +9,38 @@
 {% endblock %}
 
 {% block body%}
-<div class = 'login-container'>
-  <div class = 'form-container'>
-    <form action = '{{ url_for("login") }}' method = 'post'>
-      <div class = 'header-div'>
-        <h1>Welcome</h1>
-      </div>
-      <div class = 'input-div'>
-        <div class = 'form-group username-email-div'>
-          <input type = 'text' id = 'username' name = 'username' placeholder='Username or Email Address' required>
-        </div>
-        <script src = '{{ url_for("static", filename = "scripts/login_inputChecker.js")}}'></script>
-        <div class = 'form-group password-div'>
-          <input type = 'password' id = 'password' name = 'password' placeholder='Password' required>
-        </div>
-        <div class = 'form-group extras-div'>
-          <div class = 'remember-me-div'> <input type = 'checkbox' id = 'remember' name = 'remember'>
-            <label for = 'remember'>Remember Me</label>
+  {% if current_user.is_authenticated %}
+    <h2>Already logged in as {{current_user.username}}</h2>
+    <a href="{{url_for('index')}}">Home</a>
+  {% else %}
+    <div class = 'login-container'>
+      <div class = 'form-container'>
+        <form action = '{{ url_for("login") }}' method = 'post'>
+          <div class = 'header-div'>
+            <h1>Welcome</h1>
           </div>
-          <div class = 'forgot-password-div'> <p><a href = '{{ url_for("forgot_password")}}'>Forgot your password?</a></p>
+          <div class = 'input-div'>
+            <div class = 'form-group username-email-div'>
+              <input type = 'text' id = 'username' name = 'username' placeholder='Username or Email Address' required>
+            </div>
+            <script src = '{{ url_for("static", filename = "scripts/login_inputChecker.js")}}'></script>
+            <div class = 'form-group password-div'>
+              <input type = 'password' id = 'password' name = 'password' placeholder='Password' required>
+            </div>
+            <div class = 'form-group extras-div'>
+              <div class = 'remember-me-div'> <input type = 'checkbox' id = 'remember' name = 'remember'>
+                <label for = 'remember'>Remember Me</label>
+              </div>
+              <div class = 'forgot-password-div'> <p><a href = '{{ url_for("forgot_password")}}'>Forgot your password?</a></p>
+              </div>
+            </div>
+          </div>  
+          <div class = 'button-div'>
+            <p>Don't have an account? <a href = '{{ url_for("register") }}'>Sign Up!</a></p>
+            <button type = 'submit'>Sign In</button>
           </div>
-        </div>
-      </div>  
-      <div class = 'button-div'>
-        <p>Don't have an account? <a href = '{{ url_for("register") }}'>Sign Up!</a></p>
-        <button type = 'submit'>Sign In</button>
+        </form>
       </div>
-    </form>
-  </div>
-</div>
+    </div>
+  {% endif %}
 {% endblock %}
