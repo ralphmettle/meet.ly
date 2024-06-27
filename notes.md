@@ -12,6 +12,8 @@
     - Return to previous page
     - Display error message 'invalid username' etc.
 
+- Port database to Mongo or Postgres
+
 ## Design
 - Logo design
 - Decide on design language for overall app
