@@ -7,7 +7,11 @@ def config_views(app, db, bcrypt):
     @app.route('/')
     def index():
         return render_template('index.html')
-
+    
+    @app.route('/home')
+    def home():
+        return render_template('home.html')
+    
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'GET':
@@ -63,8 +67,16 @@ def config_views(app, db, bcrypt):
 
     @app.route('/forgot-password')
     def forgot_password():
-        return 'The forgot password page is not yet implemented.'
+        return f'The forgot password page is not yet implemented.'
+        
+    @app.route('/friends')
+    def friends():
+        return render_template('friends.html')
     
+    @app.route('/memories')
+    def memories():
+        return render_template('memories.html')
+
     @app.route ('/users')
     def users():
         users = User.query.all()
@@ -86,8 +98,8 @@ def config_views(app, db, bcrypt):
         '''
         return 'The user page is not yet implemented.'
 
-    @app.route('/user/profile/<username>')
-    def user_profile(username):
+    @app.route('/profile/<username>')
+    def profile(username):
         '''
         # Return the public profile page for the given user
         user = User.query.filter_by(username=username).first()

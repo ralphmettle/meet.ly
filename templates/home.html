@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block stylesheet %}
+<link rel = 'stylesheet' href = '{{ url_for("static", filename = "css/home.css")}}'>
+{% endblock %}
+
+{% block head %}
+    {% if current_user.is_authenticated %}
+        <div class = 'home-container'>
+            <div class = 'nav-container'>
+                <div class = 'user-container'>
+                    <h1>Hello, 
+                        {% if current_user.firstname %}
+                            {{ current_user.firstname }}
+                        {% else %}
+                            {{ current_user.username }}
+                        {% endif %}
+                    </h1>
+                </div>
+                <div class = 'friends-container'>
+                    <a href="{{url_for('friends')}}">Friends</a>
+                </div>
+            </div>
+            <div class = 'feed-container'>
+
+            </div>
+        </div>
+    {% else %}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+{% endblock %}

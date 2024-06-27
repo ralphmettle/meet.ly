@@ -17,6 +17,8 @@ def add_test_user():
                 username='dev_test',
                 email='dev_test@test.com',
                 password=bcrypt.generate_password_hash('dev_test').decode('utf-8'),
+                firstname='Dev',
+                lastname='Test',
                 role='dev_test',
                 description='For developer testing purposes.'
             )
@@ -33,6 +35,8 @@ def add_test_user():
                     username='test',
                     email='test@test.com',
                     password=bcrypt.generate_password_hash('test').decode('utf-8'),
+                    firstname='Test',
+                    lastname='User',
                     role='test',
                     description='For developer testing purposes.'
             )

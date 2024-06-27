@@ -1,10 +1,10 @@
 :root {
-    --accent-color: #86786f;
-    --accent-color-dark: #534e4a;
+    --accent-color: #5481ff;
+    --accent-color-dark: #3150ff;
     --accent-color-darker: #161a46;
     --secondary-color: #ff708f;
     --secondary-color-light: #ff85aa;
-    --background-color: #f2ebe6;
+    --background-color: #ffebb4;
     --text-color: #616161;
     --text-color-dark: #0e0e0e;
 }
@@ -40,6 +40,7 @@ body {
     background-color: rgb(224, 0, 30);
     text-align: center;
     padding: 5px;
+    border-radius: 10px;
     width: 40%;
     box-shadow: 0 0px 10px rgba(0,0,0,0.2);
     display: none
@@ -48,7 +49,7 @@ body {
 /* login-container encompasses the whole viewport */
 .login-container {
     display: flex;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
     height: 100vh;
     background-color: var(--background-color);
@@ -59,9 +60,10 @@ body {
     display: flex;
     background-color: #fff;
     padding: 50px;
-    /*box-shadow: 0 0 20px rgba(0, 0, 0, .0);*/
+    border-radius: 25px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .1);
     width: 500px;
-    height: 100vh;
+    height: 700px;
     box-sizing: border-box;
     flex-direction: column;
     justify-content: center;
@@ -71,11 +73,10 @@ body {
     display: flex;
     flex: 1;
     justify-content: center;
-    align-items: flex-end;
     color: var(--text-color-dark);
     font-size: 200%;
     font-weight: extra-bold;
-    margin-top: 50px;
+    margin-top: 30px;
     margin-bottom: 0px;
 }
 
@@ -107,7 +108,7 @@ input[type='password'] {
     width: 100%;
     padding: 15px;
     border: 1px solid #00000020;
-
+    border-radius: 7.5px;
     box-sizing: border-box;
     font-size: 100%;
     color: var(--text-color);
@@ -153,34 +154,10 @@ input[type='password']:focus::placeholder {
 }
 
 input[type='checkbox'] {
-    /* Remove default appearance of the checkbox to make it square */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    width: 15px; /* Set the desired width */
-    height: 15px; /* Set the desired height */
-    border: 1px solid var(--accent-color);
-    background-color: white;
-    cursor: pointer;
-    position: relative;
-    outline: none;
+    accent-color: var(--accent-color);
+    transform: scale(1.35);
+    margin-right: 10px;
 }
-
-input[type='checkbox']:checked {
-    background-color: var(--accent-color);
-}
-
-input[type='checkbox']:checked::after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 9px;
-    height: 9px;
-    background-color: white;
-}
-
 
 /* handles the div that contains the 'Sign In' button */
 .button-div {
@@ -207,7 +184,7 @@ button[type='submit'] {
     width: 100%;
     padding: 20px;
     border: 0;
-
+    border-radius: 10px;
     cursor: pointer;
     font-size: 100%;
 }
