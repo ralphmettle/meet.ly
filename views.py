@@ -10,7 +10,10 @@ def config_views(app, db, bcrypt):
     
     @app.route('/home')
     def home():
-        return render_template('home.html')
+        if current_user.is_authenticated:
+            return render_template('home.html', username=current_user.username)
+        else:
+            return render_template('home.html')
     
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -21,7 +24,7 @@ def config_views(app, db, bcrypt):
             email = request.form.get('email')
             password = request.form.get('password')
             
-            # Check the database for the user with the given username
+            # Check the database for the user with the given username if provided, otherwise check by email
             def find_db_user(username, email):
                 if username is not None:
                     return User.query.filter_by(username=username).first()
@@ -69,6 +72,17 @@ def config_views(app, db, bcrypt):
     def forgot_password():
         return f'The forgot password page is not yet implemented.'
         
+    @app.route('/<username>')
+    def user(username):
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            return '404 Not Found', 404
+        
+        if current_user.is_authenticated and current_user.username == username:
+            return render_template('profile.html', user=user, user_profile = True)
+        else:
+            return render_template('profile.html', user=user, user_profile = False)
+    
     @app.route('/friends')
     def friends():
         return render_template('friends.html')
@@ -76,33 +90,8 @@ def config_views(app, db, bcrypt):
     @app.route('/memories')
     def memories():
         return render_template('memories.html')
-
-    @app.route ('/users')
-    def users():
-        users = User.query.all()
-        return str(users)
     
-    @app.route('/user/<username>')
-    def user_page(username):
-        '''
-        Return the user page for the current logged-in user ONLY if the user
-        is currently logged in and this is their session. Otherwise, return a
-        403 error page with a back button.
-        '''
+    @app.route('/hangouts')
+    def hangouts():
+        return render_template('hangouts.html')
 
-        '''
-        if not current_user.is_authenticated:
-            return '403 Forbidden', 403
-        
-        return render_template('user.html', username=username)
-        '''
-        return 'The user page is not yet implemented.'
-
-    @app.route('/profile/<username>')
-    def profile(username):
-        '''
-        # Return the public profile page for the given user
-        user = User.query.filter_by(username=username).first()
-        return render_template('profile.html', user=user)
-        '''
-        return 'The profile page is not yet implemented.'

@@ -22,7 +22,7 @@ class Friendship(db.Model):
     __tablename__ = 'friendship'
     
     user_id = db.Column(db.String(36), db.ForeignKey('user.user_id'), primary_key=True, nullable=False)
-    friend_id = db.Column(db.String(36), db.ForeignKey('user.user_id'), primary_key=True, nullable=False)
+    friend_id = db.Column(db.String(36), db.ForeignKey('user.user_id'), nullable=False)
     status = db.Column(db.Enum('pending', 'accepted'), default='pending', nullable=False)
     date_created = db.Column(db.DateTime, default=db.func.now, nullable=False)
 

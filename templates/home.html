@@ -16,13 +16,20 @@
                             {{ current_user.username }}
                         {% endif %}
                     </h1>
-                </div>
-                <div class = 'friends-container'>
+                <div class = 'sidebar-container'>
+                    <a href="{{url_for('home')}}">Home</a>
+                    <a href="{{url_for('hangouts')}}">Hangouts</a>
+                    <a href="{{url_for('profile')}}">Profile</a>
+                    <a href="{{url_for('logout')}}">Logout</a>
                     <a href="{{url_for('friends')}}">Friends</a>
                 </div>
             </div>
             <div class = 'feed-container'>
-
+                <h2>Feed</h2>
+                <div class = 'post-container'>
+                    <h3>Post</h3>
+                    <p>Post content</p>
+                </div>
             </div>
         </div>
     {% else %}
