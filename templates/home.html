@@ -19,7 +19,7 @@
                 <div class = 'sidebar-container'>
                     <a href="{{url_for('home')}}">Home</a>
                     <a href="{{url_for('hangouts')}}">Hangouts</a>
-                    <a href="{{url_for('profile')}}">Profile</a>
+                    <a href="{{url_for('user', username=current_user.username)}}">Profile</a>
                     <a href="{{url_for('logout')}}">Logout</a>
                     <a href="{{url_for('friends')}}">Friends</a>
                 </div>
