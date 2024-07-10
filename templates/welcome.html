@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block stylesheet %}
+<!-- <link rel = 'stylesheet' href = '{{ url_for("static", filename = "css/REFERENCE.css")}}'> -->
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+<!-- A form on the page that handles uploading a profile picture image as well as input for user location -->
+<!-- Need API for obtaining user geolocation information in the form of latitude and longitude-->
+<!-- Need JS logic to process latitude and longitude data with OSM API-->
+<!-- Need JS logic to dynamically update suggestion for the user's location if they manually input using OSM API-->
+<!-- Reflect the latitude and longitude/manually inputted data as 'Town, City' -->
+{% block body %}
+<div class="welcome-container">
+    <div class="form-container">
+        <form action="{{ url_for('welcome')}}" method="post">
+            <div class="header-container">
+                <h1>Welcome!</h1>
+            </div>
+            <div class="picture-container">
+                <p>Profile Picture Upload</p>
+            </div>
+            <div class="location_input-container">
+                <p>Retrieve location</p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<br></br>
+<p>The welcome page is not yet implemented.</p>
+<br></br>
+<a href="{{url_for('logout')}}">Logout</a>
+{% endblock %}

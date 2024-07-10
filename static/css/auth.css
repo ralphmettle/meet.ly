@@ -101,8 +101,8 @@ body {
 
 /* Styling for text input boxes */
 
-input[type='text'],
-input[type='password'] {
+.form-group input[type='text'],
+.form-group input[type='password'] {
     font-family: Helvetica, Arial, sans-serif; /* Font family included in the form for compatibility with certain browsers, otherwise renders as generic serif font. */
     width: 100%;
     padding: 15px;
@@ -114,14 +114,14 @@ input[type='password'] {
     margin-top: 20px;
 }
 
-input[type='text']:focus,
-input[type='password']:focus {
+.form-group input[type='text']:focus,
+.form-group input[type='password']:focus {
     accent-color: var(--accent-color);
 }
 
 /* Make the placeholder text transparent when focused */
-input[type='text']:focus::placeholder,
-input[type='password']:focus::placeholder {
+.form-group input[type='text']:focus::placeholder,
+.form-group input[type='password']:focus::placeholder {
     color: transparent;
 }
 

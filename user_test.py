@@ -12,7 +12,7 @@ def add_test_user():
         test = User.query.filter_by(username='dev_test').first()
         if not test:
             # Create the test user
-            test_user = User(
+            dev_test_user = User(
                 id=str(uuid4()),  # Generate a new UUID for the user ID
                 username='dev_test',
                 email='dev_test@test.com',
@@ -20,11 +20,12 @@ def add_test_user():
                 firstname='Dev',
                 lastname='Test',
                 role='dev_test',
-                description='For developer testing purposes.'
+                description='For developer testing purposes.',
+                welcomed=True
             )
-            db.session.add(test_user)
+            db.session.add(dev_test_user)
             db.session.commit()
-            print(f'dev_test user created: {test_user}')
+            print(f'dev_test user created: {dev_test_user}')
         else:
             print('dev_test user already exists.')
 
@@ -38,7 +39,8 @@ def add_test_user():
                     firstname='Test',
                     lastname='User',
                     role='test',
-                    description='For developer testing purposes.'
+                    description='For developer testing purposes.',
+                    welcomed=False
             )
             db.session.add(user)
             db.session.commit()

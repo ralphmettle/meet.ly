@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     firstname = db.Column(db.String, default=None)
     lastname = db.Column(db.String, default=None)
     role = db.Column(db.String, default='user')
+    welcomed = db.Column(db.Boolean, default=False)
     description = db.Column(db.String, default=None)
     
 
@@ -21,8 +22,8 @@ class User(db.Model, UserMixin):
 class Friendship(db.Model):
     __tablename__ = 'friendship'
     
-    user_id = db.Column(db.String(36), db.ForeignKey('user.user_id'), primary_key=True, nullable=False)
-    friend_id = db.Column(db.String(36), db.ForeignKey('user.user_id'), nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    friend_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     status = db.Column(db.Enum('pending', 'accepted'), default='pending', nullable=False)
     date_created = db.Column(db.DateTime, default=db.func.now, nullable=False)
 
@@ -32,24 +33,28 @@ class Friendship(db.Model):
 class Hangout(db.Model):
     __tablename__ = 'hangout'
 
-    hangout_id = db.Column(db.String(36), primary_key=True, default=str(uuid4), unique=True, nullable=False)
-    user_id = db.Column(db.String(36), db.ForeignKey('user.user_id'), nullable=False)
+    id = db.Column(db.String(36), primary_key=True, default=str(uuid4), unique=True, nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     location_id = db.Column(db.String(36), db.ForeignKey('location.location_id'), nullable=False)
     date_created = db.Column(db.DateTime, default=db.func.now, nullable=False)
     description = db.Column(db.String, default=None)
 
     def __repr__(self):
-        return f'hangout_id: {self.hangout_id}; '
+        return f'id: {self.id}; '
     
 class HangoutAttendee(db.Model):
     __tablename__ = 'hangout_attendee'
 
     hangout_attendee_id = db.Column(db.String(36), primary_key=True, default=str(uuid4), unique=True, nullable=False)
-    hangout_id = db.Column(db.String(36), db.ForeignKey('hangout.hangout_id'), nullable=False)
-    user_id = db.Column(db.String(36), db.ForeignKey('user.user_id'), nullable=False)
+    id = db.Column(db.String(36), db.ForeignKey('hangout.id'), nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     status = db.Column(db.Enum('pending', 'accepted', 'rejected'), default='pending', nullable=False)
+'''
+class UserLocation(db.Model):
+    __tablename__ = 'user_location'
 
-
+    pass
+'''
 class Location(db.Model):
     __tablename__ = 'location'
 

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block stylesheet %}
+<!-- <link rel = 'stylesheet' href = '{{ url_for("static", filename = "css/hangouts.css")}}'> -->
+{% endblock %}
+
+{% block head %}
+<h1> Hangouts </h1>
+{% endblock %}
+
+{% block body %}
+<div class="page-container">
+    <div class="new_hangout-container">
+        <a href="{{url_for('new_hangout')}}">New Hangout</a>
+    </div>
+    <div class="hangout_feed-container">
+        <p>Feed</p>
+    </div>
+</div>
+{% endblock %}

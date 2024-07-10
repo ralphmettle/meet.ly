@@ -1,14 +1,37 @@
 from flask import render_template, request, redirect, url_for
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from models import User
 
 def config_views(app, db, bcrypt):
 
+    @app.before_request
+    def check_welcomed_status():
+        if current_user.is_authenticated:
+            if not current_user.welcomed and \
+            request.endpoint not in ['welcome', 'logout']:
+                return redirect(url_for('welcome'))
+            
+    # @app.before_request
+    # def check_login_status():
+    #     endpoints = [
+    #         'login',
+    #         'register',
+    #         'forgot_password',
+    #         'home',
+    #         'index'
+    #     ]
+        
+    #     if not current_user.is_authenticated and \
+    #         request.endpoint not in endpoints and \
+    #         not request.endpoint.startswith('static'): # CSS won't work without this
+    #             return redirect(url_for('login'))
+        
     @app.route('/')
     def index():
         return render_template('index.html')
     
     @app.route('/home')
+    @login_required
     def home():
         if current_user.is_authenticated:
             return render_template('home.html', username=current_user.username)
@@ -42,6 +65,7 @@ def config_views(app, db, bcrypt):
                 return f"Incorrect username or password.\nCredentials: {username}, {email}, {password}"
             
     @app.route('/logout')
+    @login_required
     def logout():
         logout_user()
         return redirect(url_for('index'))
@@ -67,6 +91,27 @@ def config_views(app, db, bcrypt):
             create_user_in_db(username, email, password)
 
         return redirect(url_for('login'))
+    
+    @app.route('/welcome', methods=['GET', 'POST'])
+    @login_required
+    def welcome():
+        if request.method == 'GET':
+            if current_user.welcomed:
+                return redirect(url_for('home'))
+            else:
+                return render_template('welcome.html')
+            
+            # Get the profile picture and location of user
+            # Possibly implement logic to select preferred vibes
+        if request.method == 'POST':
+            # Get user profile picture if submitted
+                # Name the file user.ID_profilepicture for storage in the database
+            # Get user location        
+
+            #user_location = request.form.get('location')
+            # Process location data and save to the database
+
+            return redirect(url_for('home'))
 
     @app.route('/forgot-password')
     def forgot_password():
@@ -84,14 +129,23 @@ def config_views(app, db, bcrypt):
             return render_template('profile.html', user=user, user_profile = False)
     
     @app.route('/friends')
+    @login_required
     def friends():
         return render_template('friends.html')
     
     @app.route('/memories')
+    @login_required
     def memories():
         return render_template('memories.html')
     
     @app.route('/hangouts')
+    @login_required
     def hangouts():
         return render_template('hangouts.html')
+    
+    @app.route('/hangouts/new')
+    @login_required
+    def new_hangout():
+        return render_template('new_hangout.html')
+
 

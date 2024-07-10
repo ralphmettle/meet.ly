@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block stylesheet %}
+<!-- <link rel = 'stylesheet' href = '{{ url_for("static", filename = "css/REFERENCE.css")}}'> -->
+{% endblock %}
+
+{% block head %}
+<h1>Create a new Hangout</h1>
+<script src="https://kit.fontawesome.com/c5e9f26cf9.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block body %}
+<div class="page-container">
+    <div class="form-container">
+        <div class="hangout_title-container">
+            <div class="pen-icon">
+                <i class="fa-solid fa-pen"></i>
+            </div>
+            <div class="hangout_title">
+                <h2 contenteditable="true"> New Hangout</h2>
+                <!-- I want this to be editable and be submitted as the title of the hangout for when it is stored in the database -->
+            </div>
+        </div>
+        <div class="invitee-container">
+            <div class="user-icon">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <h3>Invitees:</h3>
+            <input type="text" id="invitee-input" placeholder="Enter name or username">
+            <!-- A box here that you can type someone's name in, if they are a user of the app suggest autocomplete from friends list, otherwise can manually input name of someone that doesn't use the app -->
+            <!-- Once a name/username has been input and submitted, it should persist as a rounded box with the name of the user inside of it -->
+        </div>
+        <div class="location-container">
+            <h3>Where would you like to go?</h3>
+            <div class="location-icon">
+                <i class="fa-solid fa-compass"></i>
+            </div>
+            <div class="location_input-container">
+                <div class="suggestion-container">
+                    <p>Suggest for me!</p> <!-- Align this below the header -->
+                </div>
+                <!-- Display a popup of keywords that can be used to search OpenStreetMap API to search for venues -->
+                <input type="text" id="venue-input" placeholder="Location">
+                <!-- An input field for the name of a venue, once filled it should fetch and dynamically update the box next to the header with information of the place from OpenStreetMap API with a picture and a description -->
+                <!-- Once a user inputs a venue/location and submits the hangout the venue should be stored in the database so that the user can add a publicly visible rating -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
