@@ -15,22 +15,77 @@
 {% block body %}
 <div class="welcome-container">
     <div class="form-container">
-        <form action="{{ url_for('welcome')}}" method="post">
+        <form action="{{ url_for('welcome')}}" method="POST">
             <div class="header-container">
-                <h1>Welcome!</h1>
+                <h1>
+                    Welcome!
+                </h1>
             </div>
-            <div class="picture-container">
-                <p>Profile Picture Upload</p>
+            <div class="picture_upload-container">
+                <form id="picture-form" method="POST">
+                    <label for="profile-picture">
+                        Upload profile picture
+                    </Label>
+                    <input type="file" id="profile-picture" name="profile_picture">
+                </form>
             </div>
+            <br></br>
             <div class="location_input-container">
-                <p>Retrieve location</p>
+                <button onclick="getLocation()">Get current location</button>
+                <form id="location-form" method="POST" action="/submit_location">
+                    <input type="hidden" id="latitude" name="latitude">
+                    <input type="hidden" id="longitude" name="longitude">
+                </form>
+                
+                <!-- For testing -->
+                <button id="toggle_view" onclick="toggleButton()">Show coordinates</button>
+                <script>
+                    function toggleButton() {
+                        var lat = document.getElementById("latitude");
+                        var long = document.getElementById("longitude");
+
+                        if (lat.type === "hidden") {
+                            lat.type = "text";
+                            long.type = "text";
+                            document.getElementById("toggle_view").textContent = "Hide coordinates";
+                        } else {
+                            lat.type = "hidden";
+                            long.type = "hidden";
+                            document.getElementById("toggle_view").textContent = "Show coordinates";
+                        }
+                    }
+                </script>
+
+                <!-- Edit the script to make it so that the location data is only submitted on form button submission -->
+                <!-- Move the script to a separate .js file for reference from /scripts -->
+                <script>
+                    function getLocation() {
+                        event.preventDefault();
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(showPosition);
+                        } else {
+                            alert("Geolocation is not supported by this browser . Please input your location manually..");
+                        }
+                    }
+
+                    function showPosition(position) {
+                        document.getElementById("latitude").value = position.coords.latitude;
+                        document.getElementById("longitude").value = position.coords.longitude;
+                    }
+                </script>
+
+                <!-- Implement another script to allow manual input, turning the above button into a text input field powered by OSM API for autocomplete -->
+                <!-- Needs to be revertible so that the user can choose to use geodata or for if they made a mistake -->
+                <p>
+                    Or manually input location.
+                </p>
             </div>
         </form>
     </div>
 </div>
 
 <br></br>
-<p>The welcome page is not yet implemented.</p>
-<br></br>
-<a href="{{url_for('logout')}}">Logout</a>
+<a href="{{url_for('logout')}}">
+    Logout
+</a>
 {% endblock %}

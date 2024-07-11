@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block stylesheet %}
-<link rel = 'stylesheet' href = '{{ url_for("static", filename = "css/auth.css")}}'>
+<link rel='stylesheet' href='{{ url_for("static", filename = "css/auth.css")}}'>
 {% endblock %}
 
 {% block head %}
@@ -9,38 +9,39 @@
 {% endblock %}
 
 {% block body%}
-    {% if current_user.is_authenticated %}
-        <h2>Already logged in as {{current_user.username}}</h2>
-        <a href="{{url_for('index')}}">Home</a>
-    {% else %}
-        <div class = 'login-container'>
-            <div id='error-banner' class='error-banner' style='display: none;'>
-                <p>Not a valid email address.</p>
+{% if current_user.is_authenticated %}
+<h2>Already logged in as {{current_user.username}}</h2>
+<a href="{{url_for('index')}}">Home</a>
+{% else %}
+<div class='login-container'>
+    <div id='error-banner' class='error-banner' style='display: none;'>
+        <p>Not a valid email address.</p>
+    </div>
+    <div class='form-container'>
+        <form action='{{ url_for("register") }}' method='post'>
+            <div class='header-div'>
+                <h1>Register</h1>
             </div>
-            <div class = 'form-container'>
-                <form action = '{{ url_for("register") }}' method = 'post'>
-                    <div class = 'header-div'>
-                        <h1>Register</h1>
-                    </div>
-                    <div class = 'input-div'>
-                        <div class = 'form-group username-div'>
-                            <input type = 'text' id = 'username' name = 'username' placeholder='Username' required>
-                        </div>
-                        <div class = 'form-group email-div'>
-                            <input type = 'text' id = 'email' name = 'email' placeholder='Email Address' required>
-                        </div>
-                        <script src = '{{ url_for("static", filename = "scripts/register_inputChecker.js")}}'></script>
-                        <div class = 'form-group password-div'>
-                            <input type = 'password' id = 'password' name = 'password' placeholder='Password' required>
-                            <input type = 'password' id = 'confirm_password' name = 'confirm_password' placeholder='Confirm Password' required>
-                        </div>
-                    </div>
-                    <div class = 'button-div'>
-                        <p>Already have an account? <a href = '{{ url_for("login") }}'>Sign In!</a></p>
-                        <button type = 'submit'>Register</button>
-                    </div>
-                </form>
+            <div class='input-div'>
+                <div class='form-group username-div'>
+                    <input type='text' id='username' name='username' placeholder='Username' required>
+                </div>
+                <div class='form-group email-div'>
+                    <input type='text' id='email' name='email' placeholder='Email Address' required>
+                </div>
+                <script src='{{ url_for("static", filename = "scripts/register_inputChecker.js")}}'></script>
+                <div class='form-group password-div'>
+                    <input type='password' id='password' name='password' placeholder='Password' required>
+                    <input type='password' id='confirm_password' name='confirm_password' placeholder='Confirm Password'
+                        required>
+                </div>
             </div>
-        </div>
-    {% endif %}
+            <div class='button-div'>
+                <p>Already have an account? <a href='{{ url_for("login") }}'>Sign In!</a></p>
+                <button type='submit'>Register</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

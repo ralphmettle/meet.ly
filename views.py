@@ -10,22 +10,7 @@ def config_views(app, db, bcrypt):
             if not current_user.welcomed and \
             request.endpoint not in ['welcome', 'logout']:
                 return redirect(url_for('welcome'))
-            
-    # @app.before_request
-    # def check_login_status():
-    #     endpoints = [
-    #         'login',
-    #         'register',
-    #         'forgot_password',
-    #         'home',
-    #         'index'
-    #     ]
-        
-    #     if not current_user.is_authenticated and \
-    #         request.endpoint not in endpoints and \
-    #         not request.endpoint.startswith('static'): # CSS won't work without this
-    #             return redirect(url_for('login'))
-        
+                   
     @app.route('/')
     def index():
         return render_template('index.html')
@@ -41,7 +26,10 @@ def config_views(app, db, bcrypt):
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'GET':
-            return render_template('login.html')
+            if current_user.is_authenticated:
+                return redirect(url_for('index'))
+            else:
+                return render_template('login.html')
         elif request.method == 'POST':
             username = request.form.get('username')
             email = request.form.get('email')
@@ -73,7 +61,10 @@ def config_views(app, db, bcrypt):
     @app.route('/register', methods=['GET', 'POST'])
     def register():
         if request.method == 'GET':
-            return render_template('register.html')
+            if current_user.is_authenticated:
+                return redirect(url_for('index'))
+            else:
+                return render_template('register.html')
         elif request.method == 'POST':
             username = request.form.get('username')
             email = request.form.get('email')
@@ -148,4 +139,17 @@ def config_views(app, db, bcrypt):
     def new_hangout():
         return render_template('new_hangout.html')
 
-
+    # @app.before_request
+    # def check_login_status():
+    #     endpoints = [
+    #         'login',
+    #         'register',
+    #         'forgot_password',
+    #         'home',
+    #         'index'
+    #     ]
+        
+    #     if not current_user.is_authenticated and \
+    #         request.endpoint not in endpoints and \
+    #         not request.endpoint.startswith('static'): # CSS won't work without this
+    #             return redirect(url_for('login'))
