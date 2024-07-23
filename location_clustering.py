@@ -1,3 +1,4 @@
+import folium
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
@@ -26,5 +27,18 @@ test_coordinates = [
   [51.5077, -0.0894],  # Tower Bridge
 ]
 
+def location_visualiser(locations, central_location):
+  map = folium.Map(location=central_location, zoom_start=12)
+
+  for location in locations:
+    folium.Marker(location).add_to(map)
+
+  folium.Marker(central_location, icon=folium.Icon(color='red', icon='crosshairs', prefix='fa')).add_to(map)
+
+  folium.Circle(central_location, radius=1500, color='#219fff', fill=True, fillOpacity=0.2).add_to(map)
+
+  map.save('map.html')
+
 test = location_clustering(test_coordinates)
-print(test)
+
+location_visualiser(test_coordinates, test)

@@ -7,11 +7,6 @@
 {% block head %}
 {% endblock %}
 
-<!-- A form on the page that handles uploading a profile picture image as well as input for user location -->
-<!-- Need API for obtaining user geolocation information in the form of latitude and longitude-->
-<!-- Need JS logic to process latitude and longitude data with OSM API-->
-<!-- Need JS logic to dynamically update suggestion for the user's location if they manually input using OSM API-->
-<!-- Reflect the latitude and longitude/manually inputted data as 'Town, City' -->
 {% block body %}
 <div class="welcome-container">
     <div class="form-container">
@@ -31,54 +26,30 @@
             </div>
             <br></br>
             <div class="location_input-container">
-                <button onclick="getLocation()">Get current location</button>
-                <form id="location-form" method="POST" action="/submit_location">
-                    <input type="hidden" id="latitude" name="latitude">
-                    <input type="hidden" id="longitude" name="longitude">
-                </form>
-                
-                <!-- For testing -->
-                <button id="toggle_view" onclick="toggleButton()">Show coordinates</button>
-                <script>
-                    function toggleButton() {
-                        var lat = document.getElementById("latitude");
-                        var long = document.getElementById("longitude");
+                <div class="geolocation-container">
+                    <button onclick="getLocation(event)">
+                            Get current location
+                    </button>
 
-                        if (lat.type === "hidden") {
-                            lat.type = "text";
-                            long.type = "text";
-                            document.getElementById("toggle_view").textContent = "Hide coordinates";
-                        } else {
-                            lat.type = "hidden";
-                            long.type = "hidden";
-                            document.getElementById("toggle_view").textContent = "Show coordinates";
-                        }
-                    }
-                </script>
+                    <!-- Debug Mode elements -->
+                    <div class="debug_mode" id="debug_mode" style="display: none">
+                        <form id="location-form" method="POST" action="/submit_location">
+                            <input type="hidden" id="latitude" name="latitude">
+                            <input type="hidden" id="longitude" name="longitude">
+                        </form>
+                        <button id="debug_coords" onclick="toggleDebugButton()">
+                            Show coordinates
+                        </button>
+                    </div>
 
-                <!-- Edit the script to make it so that the location data is only submitted on form button submission -->
-                <!-- Move the script to a separate .js file for reference from /scripts -->
-                <script>
-                    function getLocation() {
-                        event.preventDefault();
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(showPosition);
-                        } else {
-                            alert("Geolocation is not supported by this browser . Please input your location manually..");
-                        }
-                    }
+                </div>
+                <div class="manual_location-container">
+                    <p>
+                        Or manually input location.
+                    </p>
 
-                    function showPosition(position) {
-                        document.getElementById("latitude").value = position.coords.latitude;
-                        document.getElementById("longitude").value = position.coords.longitude;
-                    }
-                </script>
-
-                <!-- Implement another script to allow manual input, turning the above button into a text input field powered by OSM API for autocomplete -->
-                <!-- Needs to be revertible so that the user can choose to use geodata or for if they made a mistake -->
-                <p>
-                    Or manually input location.
-                </p>
+                    <input type="text" id="location_autocomplete" name="location" placeholder="Enter your location">
+                </div>
             </div>
         </form>
     </div>
@@ -88,4 +59,99 @@
 <a href="{{url_for('logout')}}">
     Logout
 </a>
+
+{% block scripts %}
+<!-- Debug mode -->
+<script>
+    const debugMode = true;
+    const debugElement = document.getElementById("debug_mode");
+
+    if (debugMode) {
+        debugElement.style.display = "block"
+    } else {
+        debugElement.style.display = "none"
+    }
+
+    function toggleDebugButton() {
+        var lat = document.getElementById("latitude");
+        var long = document.getElementById("longitude");
+        var toggleDebugButton = document.getElementById("debug_coords");
+
+        if (lat.type === "hidden") {
+            lat.type = "text";
+            long.type = "text";
+            toggleDebugButton.textContent = "Hide coordinates";
+        } else {
+            lat.type = "hidden";
+            long.type = "hidden";
+            toggleDebugButton.textContent = "Show coordinates";
+        }
+    }
+</script>
+
+<!-- Script to handle location retrieval and debug button display -->
+<script>
+    function getCoordinates(position) {
+        document.getElementById("latitude").value = position.coords.latitude;
+        document.getElementById("longitude").value = position.coords.longitude;
+    }
+
+    function getLocation(event) {
+        event.preventDefault();
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(getCoordinates);
+        } else {
+            alert("Geolocation is not supported by this browser. Please input your location manually..");
+        }
+    }
+</script>
+
+<!-- Script to handle location input autocomplete -->
+<script>
+    let autocomplete;
+
+    function initAutocomplete() {
+        autocomplete = new google.maps.places.Autocomplete(
+            document.getElementById('location_autocomplete'),
+            { 
+                types: ['geocode'],
+                componentRestrictions: {'country': ['gb']},
+                fields: ['geometry']
+            }
+        );
+
+        autocomplete.addListener('place_changed', getLocationInfo);
+
+    function getLocationInfo() {
+        var place = autocomplete.getPlace();
+        document.getElementById("latitude").value = place.geometry.location.lat();
+        document.getElementById("longitude").value = place.geometry.location.lng();
+    }
+}
+</script>
+
+<!-- Google Maps API script -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsqXAw5paGfj1xv-SvrJgOcaowqEo9W6Y&libraries=places&callback=initAutocomplete" async defer></script>
 {% endblock %}
+
+{% endblock %}
+
+
+
+
+
+
+
+<!-- A form on the page that handles uploading a profile picture image as well as input for user location -->
+<!-- Need API for obtaining user geolocation information in the form of latitude and longitude-->
+<!-- Need JS logic to process latitude and longitude data with OSM API-->
+<!-- Need JS logic to dynamically update suggestion for the user's location if they manually input using OSM API-->
+<!-- Reflect the latitude and longitude/manually inputted data as 'Town, City' -->
+
+<!-- Edit the script to make it so that the location data is only submitted on form button submission -->
+<!-- Move the script to a separate .js file for reference from /scripts -->
+
+
+<!-- Implement another script to allow manual input, turning the above button into a text input field powered by OSM API for autocomplete -->
+<!-- Needs to be revertible so that the user can choose to use geodata or for if they made a mistake -->
+
