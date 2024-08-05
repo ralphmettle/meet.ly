@@ -31,7 +31,7 @@ def config_views(app, db, bcrypt):
     def login():
         if request.method == 'GET':
             if current_user.is_authenticated:
-                return redirect(url_for('index'))
+                return redirect(url_for('home'))
             else:
                 return render_template('login.html')
         elif request.method == 'POST':
@@ -52,7 +52,7 @@ def config_views(app, db, bcrypt):
             if user is not None:
                 if bcrypt.check_password_hash(user.password, password):
                     login_user(user)
-                    return redirect(url_for('index'))
+                    return redirect(url_for('home'))
             else:
                 return f"Incorrect username or password.\nCredentials: {username}, {email}, {password}"
             
