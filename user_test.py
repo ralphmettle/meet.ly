@@ -21,7 +21,8 @@ def add_test_user():
                 lastname='Test',
                 role='dev_test',
                 description='For developer testing purposes.',
-                welcomed=True
+                welcomed=True,
+                verified=True
             )
             db.session.add(dev_test_user)
             db.session.commit()
@@ -30,7 +31,7 @@ def add_test_user():
             print('dev_test user already exists.')
 
         user = User.query.filter_by(username='test').first()
-        if not test:
+        if not user:
             user = User(
                     id=str(uuid4()),  # Generate a new UUID for the user ID
                     username='test',
@@ -40,7 +41,8 @@ def add_test_user():
                     lastname='User',
                     role='test',
                     description='For developer testing purposes.',
-                    welcomed=False
+                    welcomed=False,
+                    verified=True
             )
             db.session.add(user)
             db.session.commit()
@@ -68,15 +70,21 @@ def delete_test_user():
             print('test user deleted.')
         else:
             print('test user does not exist.')
-def unwelcome_test_user():
+
+def test_user_welcome():
     app = create_app()
 
     with app.app_context():
         test = User.query.filter_by(username='test').first()
         if test:
-            test.welcomed = False
-            db.session.commit()
-            print('test user unwelcomed.')
+            if test.welcomed == False:
+                test.welcomed = True
+                db.session.commit()
+                print('test user welcomed.')
+            elif test.welcomed == True:
+                test.welcomed = False
+                db.session.commit()
+                print('test user unwelcomed.')
         else:
             print('test user does not exist.')
 
@@ -88,4 +96,4 @@ def delete_test():
     if __name__ == '__main__':
         delete_test_user()
 
-unwelcome_test_user()
+test_user_welcome()

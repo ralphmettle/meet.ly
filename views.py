@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, current_user, login_required
-from models import User
+from models import User, UserLocation
 
 def config_views(app, db, bcrypt):
 
@@ -13,7 +13,11 @@ def config_views(app, db, bcrypt):
                    
     @app.route('/')
     def index():
-        return render_template('index.html')
+        if current_user.is_authenticated:
+            user_location = UserLocation.query.filter_by(user_id=current_user.id).all()
+        else:
+            user_location = []
+        return render_template('index.html', user_location=user_location)
     
     @app.route('/home')
     @login_required
@@ -97,16 +101,16 @@ def config_views(app, db, bcrypt):
         elif request.method == 'POST':
             # Get user profile picture if submitted
                 # Name the file user.ID_profilepicture for storage in the database
-            # Get user location        
 
-            #user_location = request.form.get('location')
-            # Process location data and save to the database
             latitude = request.form.get('latitude')
             longitude = request.form.get('longitude')
+            user = current_user
+
             if latitude and longitude:
-                current_user.latitude = float(latitude)
-                current_user.longitude = float(longitude)
+                user_location = UserLocation(user_id=user.id, latitude=latitude, longitude=longitude)
                 current_user.welcomed = True
+
+                db.session.add(user_location)
                 db.session.commit()
             return redirect(url_for('home'))
 

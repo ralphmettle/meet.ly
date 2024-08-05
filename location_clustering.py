@@ -34,7 +34,6 @@ def location_visualiser(locations, central_location):
     folium.Marker(location).add_to(map)
 
   folium.Marker(central_location, icon=folium.Icon(color='red', icon='crosshairs', prefix='fa')).add_to(map)
-
   folium.Circle(central_location, radius=1500, color='#219fff', fill=True, fillOpacity=0.2).add_to(map)
 
   map.save('map.html')

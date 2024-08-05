@@ -17,10 +17,11 @@
                 </h1>
             </div>
             <div class="picture_upload-container">
+                <img src="{{url_for('static', filename = 'images/profile_pictures/profile-picture_default.jpg')}}" alt="Profile Picture">
                 <label for="profile-picture">
                     Upload profile picture
                 </Label>
-                <input type="file" id="profile-picture" name="profile_picture">
+                <input type="file" id="profile-picture" name="profile_picture" onchange="newProfilePicture()">
             </div>
             <br></br>
             <div class="location_input-container">
@@ -91,7 +92,7 @@
         parseFloat(value);
         return !isNaN(value) && value <= 90 && value >= -90; 
     }
-    
+
     function getCoordinates(position) {
         const lat = position.coords.latitude;
         const long = position.coords.longitude;
@@ -144,6 +145,20 @@
 
 <!-- Google Maps API script -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsqXAw5paGfj1xv-SvrJgOcaowqEo9W6Y&libraries=places&callback=initAutocomplete" async defer></script>
+
+<!-- Script to handle profile picture upload -->
+<script>
+    function newProfilePicture() {
+        const profilePicture = document.getElementById("profile-picture");
+        const profilePictureContainer = document.querySelector(".picture_upload-container img");
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            profilePictureContainer.src = e.target.result;
+        }
+        reader.readAsDataURL(profilePicture.files[0]);
+    }
+</script>
 {% endblock %}
 
 {% endblock %}

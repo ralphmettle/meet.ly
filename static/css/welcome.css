@@ -13,21 +13,16 @@
     100% { transform: rotate(360deg); }
 }
 
-.flash {
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid transparent;
-    border-radius: 4px;
+.profile-picture_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
 
-.flash.success {
-    color: #3c763d;
-    background-color: #dff0d8;
-    border-color: #d6e9c6;
-}
-
-.flash.error {
-    color: #a94442;
-    background-color: #f2dede;
-    border-color: #ebccd1;
+.profile-picture_container img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
 }

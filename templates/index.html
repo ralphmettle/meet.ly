@@ -8,9 +8,14 @@
 <h1>Home</h1>
 
     {% if current_user.is_authenticated %}
-        {% if current_user.role == 'dev_test' %}
+        {% if current_user.role == 'dev_test' or current_user.role == 'test' %}
             <h2>Hello, {{current_user.username}}.</h2>
-            <p>{{current_user}}</p>
+            <p>User data:<br></br>{{current_user}}</p>
+            {% if user_location %}
+                <p>Location data:<br></br>{{user_location}}</p>
+            {% else %}
+                <p>No location set.</p>
+            {% endif %}
         {% else %}
             <h2>Hello, {{current_user.username}}.</h2>
         {% endif %}
