@@ -8,22 +8,32 @@ document.addEventListener('DOMContentLoaded', function () {
         return re.test(String(email).toLowerCase());
     }
 
-    function toggleErrorBanner(show) {
-        if (show) {
-            errorBanner.classList.add('fade-in');
-            errorBanner.style.display = 'block';
-            setTimeout(() => {
-                errorBanner.classList.remove('fade-in');
-                errorBanner.classList.add('fade-out');
-                setTimeout(() => {
-                    errorBanner.style.display = 'none';
-                    errorBanner.classList.remove('fade-out');
-                }, 500); // Duration of fade-out animation
-            }, 5000); // Display error banner for 5 seconds
+    function toggleErrorBanner(bool) {
+        if (bool) {
+            showErrorBanner(errorBanner);
         } else {
-            errorBanner.style.display = 'none';
-            errorBanner.classList.remove('fade-in', 'fade-out');
+            hideErrorBanner(errorBanner);
         }
+    }
+
+    function showErrorBanner(errorBanner) {
+        errorBanner.classList.add('fade-in');
+        errorBanner.style.display = 'block';
+
+        setTimeout(function() {
+            errorBanner.classList.remove('fade-in');
+            errorBanner.classList.add('fade-out');
+
+            setTimeout(function() {
+                errorBanner.style.display = 'none';
+                errorBanner.classList.remove('fade-out');
+            }, 500);
+        }, 3000);
+    }
+
+    function hideErrorBanner(errorBanner) {
+        errorBanner.style.display = 'none';
+        errorBanner.classList.remove('fade-in', 'fade-out');
     }
 
     registerButton.addEventListener('click', function (event) {

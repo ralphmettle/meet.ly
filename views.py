@@ -8,7 +8,7 @@ def config_views(app, db, bcrypt):
     def check_welcomed_status():
         if current_user.is_authenticated:
             if not current_user.welcomed and \
-            request.endpoint not in ['welcome', 'logout']:
+            request.endpoint not in ['welcome', 'logout', 'static', 'index']:
                 return redirect(url_for('welcome'))
                    
     @app.route('/')
