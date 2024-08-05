@@ -68,6 +68,17 @@ def delete_test_user():
             print('test user deleted.')
         else:
             print('test user does not exist.')
+def unwelcome_test_user():
+    app = create_app()
+
+    with app.app_context():
+        test = User.query.filter_by(username='test').first()
+        if test:
+            test.welcomed = False
+            db.session.commit()
+            print('test user unwelcomed.')
+        else:
+            print('test user does not exist.')
 
 def add_test():
     if __name__ == '__main__':
@@ -77,4 +88,4 @@ def delete_test():
     if __name__ == '__main__':
         delete_test_user()
 
-add_test()
+unwelcome_test_user()

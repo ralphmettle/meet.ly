@@ -49,16 +49,21 @@ class HangoutAttendee(db.Model):
     id = db.Column(db.String(36), db.ForeignKey('hangout.id'), nullable=False)
     user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     status = db.Column(db.Enum('pending', 'accepted', 'rejected'), default='pending', nullable=False)
-'''
+
 class UserLocation(db.Model):
     __tablename__ = 'user_location'
 
-    pass
-'''
-class Location(db.Model):
-    __tablename__ = 'location'
+    id = db.Column(db.String(36), primary_key=True, default=str(uuid4), unique=True, nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    user = db.relationship('User', backref='location', lazy=True)
+    name = db.Column(db.String, default='location', nullable=False)
 
-    location_id = db.Column(db.String(36), primary_key=True, default=str(uuid4), unique=True, nullable=False)
+class VenueLocation(db.Model):
+    __tablename__ = 'venue_location'
+
+    id = db.Column(db.String(36), primary_key=True, default=str(uuid4), unique=True, nullable=False)
     name = db.Column(db.String, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)

@@ -94,14 +94,20 @@ def config_views(app, db, bcrypt):
             
             # Get the profile picture and location of user
             # Possibly implement logic to select preferred vibes
-        if request.method == 'POST':
+        elif request.method == 'POST':
             # Get user profile picture if submitted
                 # Name the file user.ID_profilepicture for storage in the database
             # Get user location        
 
             #user_location = request.form.get('location')
             # Process location data and save to the database
-
+            latitude = request.form.get('latitude')
+            longitude = request.form.get('longitude')
+            if latitude and longitude:
+                current_user.latitude = float(latitude)
+                current_user.longitude = float(longitude)
+                current_user.welcomed = True
+                db.session.commit()
             return redirect(url_for('home'))
 
     @app.route('/forgot-password')
