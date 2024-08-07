@@ -1,0 +1,3 @@
+OpenAI API Key:
+
+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

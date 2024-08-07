@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block stylesheet %}
-<link rel='stylesheet' href='{{ url_for("static", filename = "css/welcome.css")}}'>
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/welcome.css')}}">
 {% endblock %}
 
 {% block head %}
@@ -10,7 +10,9 @@
 {% block body %}
 <div class="welcome-container">
     <div id='alert-banner' class='alert-banner' style='display: none;'>
-        <p>Location obtained successfully!</p>
+        <p>
+            Location obtained successfully!
+        </p>
     </div>
     <div class="form-container">
         <form action="{{ url_for('welcome')}}" method="POST">
@@ -21,21 +23,26 @@
             </div>
             <div class="picture_upload-container">
                 <div class="profile_picture-container">
-                    <img src="{{ url_for('static', filename = 'images/profile_pictures/profile-picture_default.jpg') }}" alt="Profile Picture">
+                    <img src="{{ url_for('static', filename = 'images/profile_pictures/profile-picture_default.jpg') }}"
+                        alt="Profile Picture"
+                        data-default="{{ url_for('static', filename = 'images/profile_pictures/profile-picture_default.jpg') }}">
                 </div>
                 <div class="upload_button-container">
                     <label for="profile-picture">
                         Upload Profile Picture
                     </Label>
-                    <input type="file" id="profile-picture" name="profile_picture" accept="image/png, image/jpeg" style="display: none;" placeholder="Upload Profile Picture" onchange=newProfilePicture()>
-                    <button type="button" class="remove-button" onclick="removeProfilePicture()">Remove</button>
+                    <input type="file" id="profile-picture" name="profile_picture" accept="image/png, image/jpeg"
+                        style="display: none;" placeholder="Upload Profile Picture" onchange=newProfilePicture()>
+                    <button type="button" class="remove-button" onclick="removeProfilePicture()">
+                        Remove
+                    </button>
                 </div>
             </div>
             <br></br>
             <div class="location_input-container">
                 <div class="geolocation-container">
                     <button onclick="getLocation(event)">
-                            Get current location
+                        Get current location
                     </button>
                 </div>
                 <div class="manual_location-container">
@@ -56,180 +63,18 @@
             <a href="{{url_for('logout')}}" id="logout-button">
                 Logout
             </a>
-            <button type="submit">Submit</button>
+            <button type="submit">
+                Submit
+            </button>
         </form>
     </div>
 </div>
 
 {% block scripts %}
-<!-- Debug mode -->
-<script>
-    const debugMode = false;
-    const debugElement = document.getElementById("debug_mode");
-
-    if (debugMode) {
-        debugElement.style.display = "block"
-    } else {
-        debugElement.style.display = "none"
-    }
-
-
-    function toggleDebugButton() {
-        var lat = document.getElementById("latitude");
-        var long = document.getElementById("longitude");
-        var toggleDebugButton = document.getElementById("debug_coords");
-
-        if (lat.type === "hidden") {
-            lat.type = "text";
-            long.type = "text";
-            toggleDebugButton.textContent = "Hide coordinates";
-        } else {
-            lat.type = "hidden";
-            long.type = "hidden";
-            toggleDebugButton.textContent = "Show coordinates";
-        }
-    }
-</script>
-
-<!-- Script to handle location retrieval -->
-<script>
-    function validateCoordinates(value) {
-        parseFloat(value);
-        return !isNaN(value) && value <= 90 && value >= -90; 
-    }
-
-    function getCoordinates(position) {
-        const lat = position.coords.latitude;
-        const long = position.coords.longitude;
-        const geolocationButton = document.querySelector(".geolocation-container button");
-
-        if (validateCoordinates(lat) && validateCoordinates(long)) {
-            document.getElementById("latitude").value = lat;
-            document.getElementById("longitude").value = long;
-            
-        } else {
-            alert("Invalid coordinates. Please try again or input your location manually.");
-        }
-        
-        geolocationButton.classList.remove("loading");
-        geolocationButton.disabled = false;
-        toggleAlertBanner(true);
-    }
-
-    function getLocation(event) {
-        event.preventDefault();
-        const geolocationButton = document.querySelector(".geolocation-container button");
-        geolocationButton.classList.add("loading");
-        geolocationButton.disabled = true;
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(getCoordinates);
-        } else {
-            alert("Geolocation is not supported by this browser. Please input your location manually.");
-            geolocationButton.classList.remove("loading");
-            geolocationButton.disabled = false;
-        }
-    }
-
-    function toggleAlertBanner(bool) {
-        const alertBanner = document.getElementById("alert-banner");
-
-        if (bool) {
-            showAlertBanner(alertBanner);
-        } else {
-            hideAlertBanner(alertBanner);
-        }
-    }
-
-    function showAlertBanner(alertBanner) {
-        alertBanner.classList.add("fade-in");
-        alertBanner.style.display = "block";
-
-        setTimeout(function() {
-            alertBanner.classList.remove("fade-in");
-            alertBanner.classList.add("fade-out");
-
-            setTimeout(function() {
-                alertBanner.classList.remove("fade-out");
-                alertBanner.style.display = "none";
-            }, 500);
-        }, 3000);
-    }
-
-    function hideAlertBanner(alertBanner) {
-        alertBanner.style.display = "none";
-        alertBanner.classList.remove("fade-in", "fade-out");
-    }
-</script>
-
-<!-- Script to handle location input autocomplete -->
-<script>
-    let autocomplete;
-
-    function initAutocomplete() {
-        autocomplete = new google.maps.places.Autocomplete(
-            document.getElementById('location_autocomplete'),
-            { 
-                types: ['geocode'],
-                componentRestrictions: {'country': ['gb']},
-                fields: ['geometry']
-            }
-        );
-
-        autocomplete.addListener('place_changed', getLocationInfo);
-
-    function getLocationInfo() {
-        var place = autocomplete.getPlace();
-        document.getElementById("latitude").value = place.geometry.location.lat();
-        document.getElementById("longitude").value = place.geometry.location.lng();
-    }
-}
-</script>
-
-<!-- Google Maps API script -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsqXAw5paGfj1xv-SvrJgOcaowqEo9W6Y&libraries=places&callback=initAutocomplete" async defer></script>
-
-<!-- Scripts to handle profile picture upload -->
-<script>
-    function newProfilePicture() {
-        const profilePicture = document.getElementById("profile-picture");
-        const profilePictureContainer = document.querySelector(".profile_picture-container img");
-
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            profilePictureContainer.src = event.target.result;
-        }
-        reader.readAsDataURL(profilePicture.files[0]);
-    }
-
-    function removeProfilePicture() {
-        const profilePicture = document.getElementById("profile-picture");
-        const profilePictureContainer = document.querySelector(".profile_picture-container img");
-
-        profilePicture.value = "";
-        profilePictureContainer.src = "{{ url_for('static', filename = 'images/profile_pictures/profile-picture_default.jpg') }}";
-    }
-</script>
+<script src="{{ url_for('static', filename = 'js/welcome.js') }}"></script>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsqXAw5paGfj1xv-SvrJgOcaowqEo9W6Y&libraries=places&callback=initAutocomplete"
+    async defer></script>
 {% endblock %}
 
 {% endblock %}
-
-
-
-
-
-
-
-<!-- A form on the page that handles uploading a profile picture image as well as input for user location -->
-<!-- Need API for obtaining user geolocation information in the form of latitude and longitude-->
-<!-- Need JS logic to process latitude and longitude data with OSM API-->
-<!-- Need JS logic to dynamically update suggestion for the user's location if they manually input using OSM API-->
-<!-- Reflect the latitude and longitude/manually inputted data as 'Town, City' -->
-
-<!-- Edit the script to make it so that the location data is only submitted on form button submission -->
-<!-- Move the script to a separate .js file for reference from /scripts -->
-
-
-<!-- Implement another script to allow manual input, turning the above button into a text input field powered by OSM API for autocomplete -->
-<!-- Needs to be revertible so that the user can choose to use geodata or for if they made a mistake -->
-

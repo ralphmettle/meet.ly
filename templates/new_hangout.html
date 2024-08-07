@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block stylesheet %}
-<!-- <link rel = 'stylesheet' href = '{{ url_for("static", filename = "css/REFERENCE.css")}}'> -->
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename = 'css/REFERENCE.css') }}"> -->
 {% endblock %}
 
 {% block head %}
@@ -36,15 +36,34 @@
                 <i class="fa-solid fa-compass"></i>
             </div>
             <div class="location_input-container">
-                <div class="suggestion-container">
-                    <p>Suggest for me!</p> <!-- Align this below the header -->
+                <div class="prompt-container">
+                    <p>Provide a prompt to search for a venue! (Powered by ChatGPT)</p> <!-- Align this below the header -->
+                    <!-- A text field that a user can input a prompt that the OpenAI API will respond with a JSON object to be used to search Google Places API -->
+                    <input type="text" id="prompt" placeholder="Prompt">
+                    <button id="prompt-submit">
+                        Submit Prompt
+                    </button>
                 </div>
-                <!-- Display a popup of keywords that can be used to search OpenStreetMap API to search for venues -->
-                <input type="text" id="venue-input" placeholder="Location">
+                <div class="manual_input_container">
+                    <p>Or enter a venue name manually:</p> 
+                    <!-- Implement Google Places API Autocomplete -->
+                    <input type="text" id="venue-input" placeholder="Enter venue name">
+                    <button id="venue-submit">Submit</button>
+                    <!-- Get Place info: latitude, longitude, name -->
+                </div>
                 <!-- An input field for the name of a venue, once filled it should fetch and dynamically update the box next to the header with information of the place from OpenStreetMap API with a picture and a description -->
                 <!-- Once a user inputs a venue/location and submits the hangout the venue should be stored in the database so that the user can add a publicly visible rating -->
             </div>
         </div>
     </div>
 </div>
+
+{% block script %}
+<script src = "{{ url_for('static', filename = 'js/hangout.js')}}"></script>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsqXAw5paGfj1xv-SvrJgOcaowqEo9W6Y&libraries=places&callback=initAutocomplete"
+    async defer></script>
 {% endblock %}
+
+{% endblock %}
+

@@ -96,4 +96,8 @@ def delete_test():
     if __name__ == '__main__':
         delete_test_user()
 
-test_user_welcome()
+def toggle_welcome():
+    if __name__ == '__main__':
+        test_user_welcome()
+        
+toggle_welcome()

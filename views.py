@@ -1,6 +1,8 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 from models import User, UserLocation
+from gpt_api import client, MODEL
+import json
 
 def config_views(app, db, bcrypt):
 
@@ -148,6 +150,36 @@ def config_views(app, db, bcrypt):
     @login_required
     def new_hangout():
         return render_template('new_hangout.html')
+    
+    @app.route('/process-hangout-prompt', methods=['POST'])
+    @login_required
+    def process_hangout_prompt():
+        # Get the response from the request JSON object and extract the prompt into 'search_query'
+        data = request.get_json()
+        search_query = data.get('prompt')
+
+        response  = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {"role": "user", "content": f"Extract keywords from this text to be used to search the Google Places API: '{search_query}'. Respond *only* with a JSON object containing the keywords, nothing else, no annotations."},
+            ],
+            temperature=0,
+        )
+
+        # Extract the response from the API
+        prompt_response = response.choices[0].message.content
+
+        # Remove the markdown from the response
+        if prompt_response.startswith('```json'):
+            prompt_response = prompt_response[7:].strip()
+        if prompt_response.endswith('```'):
+            prompt_response = prompt_response[:-3].strip()
+
+        response_dict = json.loads(prompt_response)
+        keywords = response_dict.get('keywords')
+        
+        return jsonify(keywords)
+
 
     # @app.before_request
     # def check_login_status():
