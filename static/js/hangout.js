@@ -28,14 +28,6 @@ document.getElementById('prompt-submit').addEventListener('click', async functio
             alert('Processing completed successfully!');
         }
     }
-
-    const geocode_response = await getPlaceGeocode(process_response);
-
-    if (geocode_response) {
-        if (debug) {
-            alert('Geocode completed successfully!');
-        }
-    }
 });
 
 async function submitPrompt() {
@@ -107,28 +99,4 @@ async function processSearch(results) {
     }
 
     return response;
-}
-
-async function getPlaceGeocode(place_data) {
-    if (!place_data) {
-        alert('No place data was found, please enter a prompt.');
-        return;
-    }
-
-    const geocode_response = await fetch('/process-place-geocode', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ place_data }),
-    });
-
-    const response = await geocode_response.json();
-
-    if (debug) {
-        console.log(response);
-    }
-
-    return response;
-
 }

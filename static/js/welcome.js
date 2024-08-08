@@ -1,6 +1,6 @@
-const debugMode = false;
+var debugMode = false;
 
-const debugElement = document.getElementById("debug_mode");
+var debugElement = document.getElementById("debug_mode");
 
 if (debugMode) {
     debugElement.style.display = "block"
@@ -9,9 +9,9 @@ if (debugMode) {
 }
 
 function toggleDebugButton() {
-    var lat = document.getElementById("latitude");
-    var long = document.getElementById("longitude");
-    var toggleDebugButton = document.getElementById("debug_coords");
+    const lat = document.getElementById("latitude");
+    const long = document.getElementById("longitude");
+    const toggleDebugButton = document.getElementById("debug_coords");
 
     if (lat.type === "hidden") {
         lat.type = "text";
@@ -27,6 +27,13 @@ function toggleDebugButton() {
 function validateCoordinates(value) {
     parseFloat(value);
     return !isNaN(value) && value <= 90 && value >= -90;
+}
+
+function confirmLocationInput() {
+    const lat = document.getElementById("latitude").value;
+    const long = document.getElementById("longitude").value;
+
+    return (lat) !== '' && (long) !== ''
 }
 
 /* Populate the hidden latitude and longitude fields with data obtained from Geolocation API or Places API
@@ -137,3 +144,14 @@ function removeProfilePicture() {
     profilePicture.value = "";
     profilePictureContainer.src = profilePictureContainer.dataset.default;
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+
+    form.addEventListener("submit", function (event) {
+        if (!confirmLocationInput()) {
+            event.preventDefault();
+            alert("Please input your location before submitting the form.");
+        }
+    })
+})

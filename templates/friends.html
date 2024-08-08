@@ -1,6 +1,41 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<title>Friends</title>
+<h1>Friends</h1>
+{% endblock %}
+
 {% block body %}
-<p>The friends list is not yet implemented</p>
+<div class="page-container">
+
+    <div class="friends-container">
+
+        <div class="add_friend-container">
+            <h3>Add Friend:</h3>
+            <form id="user_search-form">
+                <input type="text" id="user_search-input" name="user_search" placeholder="Enter name or username">
+                <button type="submit" id="user_search-submit">Search Users</button>
+            </form>
+
+            <div class="user_search-results" hidden="true">
+                <h3>Search Results:</h3>
+                <a>placeholder</a>
+            </div>
+        </div>
+
+        <div class="friends_list-container">
+            <h3>Friends:</h3>
+            <a>placeholder</a>
+            {% for friend in friends %}
+            <li>{{ friend }}</li>
+            {% endfor %}
+        </div>
+
+    </div>
 <a href="{{url_for('home')}}">Return</a>
+
+{% block script %}
+<script src = "{{ url_for('static', filename = 'js/friends.js')}}"></script>
+{% endblock %}
+
 {% endblock %}

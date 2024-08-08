@@ -14,6 +14,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String, nullable=False)
     firstname = db.Column(db.String, default=None)
     lastname = db.Column(db.String, default=None)
+    profile_picture = db.Column(db.String(500), default=None)
     role = db.Column(db.String, default='user')
     welcomed = db.Column(db.Boolean, default=False)
     description = db.Column(db.String, default=None)
@@ -26,7 +27,7 @@ class Friendship(db.Model):
     __tablename__ = 'friendship'
     
     user_id = db.Column(db.String(36), db.ForeignKey('user.id'), primary_key=True, nullable=False)
-    friend_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
+    friend_id = db.Column(db.String(36), db.ForeignKey('user.id'), primary_key=True, nullable=False)
     status = db.Column(db.Enum('pending', 'accepted'), default='pending', nullable=False)
     date_created = db.Column(db.DateTime, default=db.func.now, nullable=False)
 
