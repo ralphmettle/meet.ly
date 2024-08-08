@@ -17,6 +17,12 @@ test_coordinates = [
   [51.5085, -0.1257],  # London Eye
   [51.5077, -0.0894],  # Tower Bridge
 ]
+def coordinate_builder(data):
+    coordinates = []
+    
+    for i in data:
+        coordinates.append([i['latitude'], i['longitude']])
+    return coordinates
 
 def location_clustering(locations):
     locations_to_array = np.array(locations)

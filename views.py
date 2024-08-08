@@ -2,7 +2,12 @@ from flask import render_template, request, redirect, url_for, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 from models import User, UserLocation
 from gpt_api import client, MODEL
+import googlemaps
 import json
+import logging
+
+places_api_key = "AIzaSyDsqXAw5paGfj1xv-SvrJgOcaowqEo9W6Y"
+gmaps = googlemaps.Client(key=places_api_key)
 
 def config_views(app, db, bcrypt):
 
@@ -178,20 +183,64 @@ def config_views(app, db, bcrypt):
         response_dict = json.loads(prompt_response)
         keywords = response_dict.get('keywords')
         
-        return jsonify(keywords)
+        return jsonify(keywords), 200
 
+    @app.route('/process-hangout-search', methods=['POST'])
+    @login_required
+    def process_hangout_search():
+        # Get the response from the request JSON object and extract the keywords
+        # Use the extracted keywords to search the Google Places API
+        # Return the Places search result to be displayed on the front-end
 
-    # @app.before_request
-    # def check_login_status():
-    #     endpoints = [
-    #         'login',
-    #         'register',
-    #         'forgot_password',
-    #         'home',
-    #         'index'
-    #     ]
+        data = request.get_json()
+        keywords = data.get('keywords')
+        location = [51.5074, -0.1278]   
+
+        # Use the keywords to search the Google Places API
+        search_query = '+'.join([keyword.replace(' ', '-') for keyword in keywords])
         
-    #     if not current_user.is_authenticated and \
-    #         request.endpoint not in endpoints and \
-    #         not request.endpoint.startswith('static'): # CSS won't work without this
-    #             return redirect(url_for('login'))
+        response = gmaps.places_nearby(location=location, radius=4000, keyword=search_query)
+
+        return jsonify(response), 200
+    
+    @app.route('/process-place-info', methods=['POST'])
+    @login_required
+    def process_place_info():
+        data = request.get_json()
+        
+        if 'results' in data:
+            places = data['results'].get('results')
+            place_info = {place.get('name'): place.get('place_id') for place in places}
+        else:
+            place_info = None
+
+        if place_info is not None:
+            return jsonify(place_info), 200
+        else:
+            return jsonify({'message': 'No place data.'}), 404
+        
+    @app.route('/process-place-geocode', methods=['POST'])
+    @login_required
+    def process_place_geocode():
+        data = request.get_json()
+        place_data = data.get('place_data')
+
+        if place_data is None:
+            return jsonify({'error': 'No place info provided.'}), 400
+
+        place_ids = list(place_data.values())
+
+        place_geocode = {
+            place_id: gmaps.geocode(place_id=place_id) for place_id in place_ids
+        }
+
+        print(place_geocode)
+
+        place_coordinates = {
+            place_name: [place[0]['geometry']['location']['lat'], place[0]['geometry']['location']['lng']] 
+            for place_name, place in place_geocode.items()
+        }
+
+        print(place_coordinates)
+
+        return jsonify(place_coordinates), 200
