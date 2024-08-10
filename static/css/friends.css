@@ -1,0 +1,62 @@
+:root {
+    --accent-color: #86786f;
+    --accent-color-dark: #534e4a;
+    --accent-color-darker: #161a46;
+    --secondary-color: #ff708f;
+    --secondary-color-light: #ff85aa;
+    --background-color: #f2ebe6;
+    --text-color: #616161;
+    --text-color-dark: #0e0e0e;
+}
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.user_search_results-container {
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+
+    height: 200px
+    
+}
+.user-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    background-color: var(--secondary-color);
+    box-shadow: 0 0px 10px rgba(0,0,0,0.2);
+    width: 300px;
+    height: 100px;
+}
+
+.user-card img {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 10px;
+    margin-right: 10px
+}
+
+.user_info-container {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+.user_info-container h3 {
+    color: white;
+    margin: 2px
+}
+
+.user_info-container p {
+    color: white;
+    margin: 2px
+}

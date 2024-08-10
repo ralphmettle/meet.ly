@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/friends.css') }}">
+{% endblock %}
+
 {% block head %}
 <title>Friends</title>
 <h1>Friends</h1>
@@ -16,10 +20,9 @@
                 <input type="text" id="user_search-input" name="user_search" placeholder="Enter name or username">
                 <button type="submit" id="user_search-submit">Search Users</button>
             </form>
-
-            <div class="user_search-results" hidden="true">
-                <h3>Search Results:</h3>
-                <a>placeholder</a>
+            
+            <div class="user_search_results-container" id="search-result" hidden="true">
+                
             </div>
         </div>
 

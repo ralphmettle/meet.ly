@@ -165,6 +165,8 @@ def config_views(app, db, bcrypt):
         return render_template('new_hangout.html')
     
 
+
+
     # Routes and functions for processing data from the front-end
     
     def get_extension(filename):
@@ -197,6 +199,9 @@ def config_views(app, db, bcrypt):
             user.profile_picture = None
             flash('Invalid file type. Please upload a .jpg, .jpeg, or .png file.')
             pass
+
+    def get_id_from_username(username):
+        return User.query.filter_by(username=username).first().id
     
     @app.route('/process-search-user', methods=['POST'])
     @login_required
@@ -220,7 +225,8 @@ def config_views(app, db, bcrypt):
             {
                 'username': user.username,
                 'firstname': user.firstname,
-                'lastname': user.lastname
+                'lastname': user.lastname,
+                'profile_picture': user.profile_picture
             }
             for user in results
         ]
@@ -239,17 +245,39 @@ def config_views(app, db, bcrypt):
         user_id = current_user.id
         friend_id = User.query.filter_by(username=friend_username).first().id
         
-        if friend_id:
-            if friend_id == user_id:
-                return jsonify({'message': 'You cannot add yourself as a friend.'}), 400
+        def existing_friendship(user_id, friend_id):
+            user_sender = Friendship.query.filter(
+                Friendship.sender_id == user_id,
+                Friendship.recipient_id == friend_id
+            ).first()
+
+            user_recipient = Friendship.query.filter(
+                Friendship.sender_id == friend_id,
+                Friendship.recipient_id == user_id
+            ).first()
+
+            if user_sender or user_recipient:
+                return True
             else:
-                new_friendship = Friendship(user_id=user_id, friend_id=friend_id)
+                return False
+             
+        if user_id and friend_id:
+            if not existing_friendship(user_id, friend_id):
+                new_friendship = Friendship(sender_id=user_id, recipient_id=friend_id)
                 db.session.add(new_friendship)
                 db.session.commit()
 
-                return jsonify({'message': 'Friend request sent.'}), 200
+            return jsonify({'message': 'Friend request sent.'}), 200
         else:
             return jsonify({'message': 'No username provided.'}), 400
+        
+    @app.route('/process-get-friends', methods=['POST'])
+    @login_required
+    def process_get_friends():
+        user_id = current_user.id
+        
+        pass
+
 
     @app.route('/process-user_id-search-coords', methods=['POST'])
     @login_required
@@ -295,7 +323,7 @@ def config_views(app, db, bcrypt):
             temperature=0,
         )
 
-        # Extract the response from the API
+        # Extract the response from the OpenAI API
         prompt_response = response.choices[0].message.content
 
         # Remove the markdown from the response
@@ -318,7 +346,7 @@ def config_views(app, db, bcrypt):
 
         data = request.get_json()
         keywords = data.get('keywords')
-        location = [51.5074, -0.1278]   
+        location = [51.5074, -0.1278]
 
         # Use the keywords to search the Google Places API
         search_query = '+'.join([keyword.replace(' ', '-') for keyword in keywords])
@@ -351,3 +379,44 @@ def config_views(app, db, bcrypt):
             return jsonify(place_info), 200
         else:
             return jsonify({'message': 'No place data.'}), 400
+        
+    #TESTING
+    @app.route('/process-get-location_cluster', methods=['POST'])
+    @login_required
+    def process_get_location_cluster():
+        data = request.get_json()
+        invited_users = data.get('usernames')
+        
+        # Get the location of the current user from user_location table by user_id
+        user_location = UserLocation.query.filter_by(user_id=current_user.id).first()
+        user_coords = [user_location.latitude, user_location.longitude]
+
+        # Get the location info of invited users
+        if invited_users:
+            invited_user_info = [
+                [username, User.query.filter_by(username=username).first().id] 
+                for username in invited_users
+            ]
+
+            invited_user_locations = {
+                username: [
+                    UserLocation.query.filter_by(user_id=user_id).first().latitude,
+                    UserLocation.query.filter_by(user_id=user_id).first().longitude
+                ]
+                for username, user_id in invited_user_info
+            }
+            
+            # Combine the user location with the invited user locations
+            invited_user_locations[current_user.username] = user_coords
+
+            coordinate_set = list(invited_user_locations.values())
+
+            # Get central coordinates via location_clustering function
+            central = location_clustering(coordinate_set)
+
+            return jsonify(central), 200
+        else:
+            return jsonify({'message': 'No invited users.'}), 400
+
+            
+

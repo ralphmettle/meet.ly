@@ -1,9 +1,10 @@
-var debug = true;
+let debug = true;
 
 document.getElementById('user_search-form').addEventListener('submit', async function (event) {
     event.preventDefault()
 
     const search_result = await searchUser();
+    let display_result = await displayUsers(search_result);
 });
 
 async function searchUser() {
@@ -29,4 +30,41 @@ async function searchUser() {
     }
 
     return search_result;
+}
+
+// Function incomplete; no relevant route or logic
+async function displayUsers(search_result) {
+    const searchResultContainer = document.getElementById('search-result');
+    searchResultContainer.innerHTML = '';
+    searchResultContainer.hidden = false;
+
+    if (!search_result || search_result.length === 0) {
+        searchResultContainer.innerHTML = 'No users found.';
+        return;
+    }
+
+    search_result.forEach(function (user) {
+        let userCard = document.createElement('div');
+        userCard.className = 'user-card';
+        userCard.id = 'user-card';
+
+        let profilePicture = user.profile_picture;
+
+        if (!profilePicture) {
+            profilePicture = 'static/images/profile_pictures/profile-picture_default.png';
+        } else {
+            profilePicture = `static/images/profile_pictures/${profilePicture}`;
+        }
+
+        userCard.innerHTML = `
+            <img src="${profilePicture}" id="profile-picture" alt="Profile Picture">
+            <div class="user_info-container" id="user-info">
+                <h3>@${user.username}</h3>
+                <p>${user.firstname} ${user.lastname}</p>
+            </div>
+            <button class="btn btn-primary">Add Friend</button>
+        `;
+
+        searchResultContainer.appendChild(userCard);
+    });
 }
