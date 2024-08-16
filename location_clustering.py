@@ -28,13 +28,13 @@ def location_visualiser(coordinates, central_coordinates):
 
 if __name__ == '__main__':
   test_coordinates = [
-  [51.5074, -0.1278],  # Central London
-  [51.5154, -0.1410],  # Near Oxford Circus
-  [51.5115, -0.1197],  # Covent Garden
-  [51.5033, -0.1195],  # Trafalgar Square
-  [51.5194, -0.1270],  # British Museum
-  [51.5085, -0.1257],  # London Eye
-  [51.5077, -0.0894],  # Tower Bridge
+  [51.5074, -0.1278],
+  [51.5154, -0.1410],
+  [51.5115, -0.1197],
+  [51.5033, -0.1195],
+  [51.5194, -0.1270],
+  [51.5085, -0.1257],
+  [51.5077, -0.0894],
   ]
   
   test = location_clustering(test_coordinates)
