@@ -48,7 +48,7 @@ class Hangout(db.Model):
     
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     is_creator = db.Column(db.Boolean, default=False, nullable=False)
-    location_id = db.Column(db.Integer, db.ForeignKey('venue_location.id'), nullable=False) 
+    venuelocation_id = db.Column(db.Integer, db.ForeignKey('venue_location.id'), nullable=False) 
     name = db.Column(db.String, nullable=False)
 
     description = db.Column(db.String, default=None)
@@ -89,3 +89,4 @@ class VenueLocation(db.Model):
     name = db.Column(db.String, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
+    place_id = db.Column(db.String, nullable=False)

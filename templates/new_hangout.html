@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block stylesheet %}
-<!-- <link rel="stylesheet" href="{{ url_for('static', filename = 'css/REFERENCE.css') }}"> -->
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/new_hangout.css') }}">
 {% endblock %}
 
 {% block head %}
@@ -18,7 +18,7 @@
                 <i class="fa-solid fa-pen"></i>
             </div>
             <div class="hangout_title">
-                <h2 contenteditable="true"> New Hangout</h2>
+                <h2 contenteditable="true">New Hangout</h2>
                 <!-- I want this to be editable and be submitted as the title of the hangout for when it is stored in the database -->
             </div>
         </div>
@@ -38,12 +38,15 @@
             </div>
             <div class="location_input-container">
                 <div class="prompt-container">
-                    <p>Provide a prompt to search for a venue! (Powered by ChatGPT)</p> <!-- Align this below the header -->
+                    <p>Provide a prompt to search for a venue!</p> <!-- Align this below the header -->
                     <!-- A text field that a user can input a prompt that the OpenAI API will respond with a JSON object to be used to search Google Places API -->
                     <input type="text" id="prompt" placeholder="Prompt">
                     <button id="prompt-submit">
                         Submit Prompt
                     </button>
+                    <button id="prev-images">Previous</button>
+                    <button id="next-images">Next</button>
+                    <div class="place_image-container" id="place_image-container"></div>
                 </div>
                 <div class="manual_input_container">
                     <p>Or enter a venue name manually:</p> 
@@ -52,6 +55,17 @@
                     <button id="venue-submit">Submit</button>
                     <!-- Get Place info: latitude, longitude, name -->
                 </div>
+                <div class="place_overlay-container" id="place_overlay-container">
+                    <div class="overlay_content-container" id="overlay_content-container">
+                        <img id="place_image" src="" alt="Place Image">
+                        <h2 id="place_name"></h2>
+                        <p id="place_address"></p>
+                        <p id="place_review_summary"></p>
+                        <a id="place_maps_link" href="" target="_blank">View on Google Maps</a>
+                        <button id="confirm_venue-button">Add Hangout</button>
+                    </div> 
+                </div>
+                
                 <!-- An input field for the name of a venue, once filled it should fetch and dynamically update the box next to the header with information of the place from OpenStreetMap API with a picture and a description -->
                 <!-- Once a user inputs a venue/location and submits the hangout the venue should be stored in the database so that the user can add a publicly visible rating -->
             </div>

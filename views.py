@@ -336,6 +336,29 @@ def config_views(app, db, bcrypt):
         keywords = response_dict.get('keywords')
         
         return jsonify(keywords), 200
+    
+    @app.route('/process-review-summary', methods=['POST'])
+    @login_required
+    def process_review_summary():
+        data = request.get_json()
+        reviews = data.get('reviews')
+
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {"role": "user", "content": f"I am going to pass a JSON object with some reviews of a place from Google Places. Generate a single summary made from the following reviews: {reviews} and return it as a JSON object *only*."},
+            ],
+            temperature=0,
+        )
+
+        prompt_response = response.choices[0].message.content
+
+        if prompt_response.startswith('```json'):
+            prompt_response = prompt_response[7:].strip()
+        if prompt_response.endswith('```'):
+            prompt_response = prompt_response[:-3].strip()
+        
+        return jsonify(prompt_response), 200
 
     @app.route('/process-hangout-search', methods=['POST'])
     @login_required
@@ -362,7 +385,7 @@ def config_views(app, db, bcrypt):
         
         if 'results' in data:
             places = data['results'].get('results')
-            # Extract the place name, place ID, and location coordinates as a dictionary
+            # Extract the place name, place ID, location coordinates, and photo reference as a dictionary
             place_info = {
                 place.get('name'): [
                     place.get('place_id'),
@@ -379,6 +402,47 @@ def config_views(app, db, bcrypt):
             return jsonify(place_info), 200
         else:
             return jsonify({'message': 'No place data.'}), 400
+        
+    @app.route('/process-get-place-photo', methods=['POST'])
+    @login_required
+    def process_get_place_photo():
+        data = request.get_json()
+        place_info = data.get('place_info')
+
+        if not place_info:
+            return jsonify({"error": "No place information provided."}), 400
+
+        photo_responses = {}
+
+        for place_id, info in place_info.items():
+            photo_reference = info[2]  # Assuming [2] is the photo_reference
+            if photo_reference:
+                try:
+                    # Fetch the photo from Google Places API
+                    response = gmaps.places_photo(photo_reference=photo_reference, max_width=400)
+                    if response.status_code == 200:
+                        photo_responses[place_id] = {
+                            'photo_url': response.url,
+                            'status': 'success'
+                        }
+                    else:
+                        photo_responses[place_id] = {
+                            'error': f"Failed to retrieve photo for place ID {place_id}",
+                            'status': 'failed'
+                        }
+                except Exception as e:
+                    photo_responses[place_id] = {
+                        'error': str(e),
+                        'status': 'failed'
+                    }
+            else:
+                photo_responses[place_id] = {
+                    'error': f"No photo reference provided for place ID {place_id}",
+                    'status': 'failed'
+                }
+
+        return jsonify(photo_responses), 200  # Correctly return the 'photo_responses' dictionary
+
         
     #TESTING
     @app.route('/process-get-location_cluster', methods=['POST'])
