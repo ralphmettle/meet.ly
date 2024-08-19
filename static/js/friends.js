@@ -44,10 +44,7 @@ async function displayUsers(user_list, container_id, addFriend) {
     }
 
     user_list.forEach(function (user) {
-        let userCard = document.createElement('div');
-        userCard.className = 'user-card';
-        userCard.id = 'user-card';
-
+        
         let profilePicture = user.profile_picture;
 
         if (!profilePicture) {
@@ -57,26 +54,35 @@ async function displayUsers(user_list, container_id, addFriend) {
         }
 
         if (addFriend === true) {
+            let userCard = document.createElement('div');
+            userCard.className = 'user-card';
+            userCard.id = 'user-card';
+
             userCard.innerHTML = `
                 <img src="${profilePicture}" id="profile-picture" alt="Profile Picture">
                 <div class="user_info-container" id="user-info">
                     <h3>@${user.username}</h3>
                     <p>${user.firstname} ${user.lastname}</p>
                 </div>
-                <button class="btn btn-primary">Add Friend</button>
+                <button class="btn btn-primary" id=${user.username}>Add Friend</button>
             `;
 
             container.appendChild(userCard);
+            addFriendRequestListeners(`${user.username}`);
         } else {
-            userCard.innerHTML = `
+            let friendCard = document.createElement('div');
+            friendCard.className = 'friend-card';
+            friendCard.id = 'friend-card';
+
+            friendCard.innerHTML = `
                 <img src="${profilePicture}" id="profile-picture" alt="Profile Picture">
-                <div class="user_info-container" id="user-info">
+                <div class="friend_info-container" id="user-info">
                     <h3>@${user.username}</h3>
                     <p>${user.firstname} ${user.lastname}</p>
                 </div>
             `;
 
-            container.appendChild(userCard);
+            container.appendChild(friendCard);
         }
     });
 }
@@ -107,6 +113,68 @@ async function loadFriendsList() {
     }
 }
 
+
+function addFriendRequestListeners(username) {
+    const button = document.getElementById(username);
+
+    button.addEventListener('click', async function (event) {
+        event.preventDefault();
+
+        const username = event.target.id;
+
+        if (debug) {
+            console.log(username);
+        }
+        
+        const add_response = await fetch('/process-send-friend-request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username }),
+        });
+
+        const add_result = await add_response.json();
+
+        if (debug) {
+            console.log(add_result);
+        }
+    });
+}
+
+async function countRequests() {
+    const count_response = await fetch('/process-count-friend-requests', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const response = await count_response.json();
+
+    if (debug) {
+        console.log(response);
+    }
+
+    return response;
+}
+
+const friendRequestCounter = document.getElementById('friend-request-counter');
+
+async function loadFriendRequestCount() {
+    const countRequest = await countRequests();
+    let count = countRequest.count;
+    
+    if (count === 0) {
+        friendRequestCounter.innerHTML = 'No new friend requests.';
+    } else {
+        friendRequestCounter.hidden = false
+        friendRequestCounter.innerHTML = `${count} friend requests`;
+    }
+    
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     loadFriendsList();
+    loadFriendRequestCount();
 });

@@ -268,15 +268,6 @@ def config_views(app, db, bcrypt):
             return jsonify(return_users), 200
         else:
             return jsonify({'message': 'No user found.'}), 400
-    
-    @app.route('/process-add-friend', methods=['POST'])
-    @login_required
-    def process_add_friend():
-        data = request.get_json()
-        friend_username = data.get('username')
-        
-        user_id = current_user.id
-        friend_id = User.query.filter_by(username=friend_username).first().id
         
     @app.route('/process-get-friends', methods=['POST'])
     @login_required
@@ -320,6 +311,17 @@ def config_views(app, db, bcrypt):
         else:
             return jsonify({'message': 'No friend requests.'}), 400
         
+    @app.route('/process-count-friend-requests', methods=['POST'])
+    @login_required
+    def process_count_friend_requests():
+        user_id = current_user.id
+        friend_requests = get_friend_requests(user_id)
+        
+        if friend_requests:
+            return jsonify({'count': len(friend_requests)}), 200
+        else:
+            return jsonify({'count': 0}), 200
+        
     @app.route('/process-get-sent-requests', methods=['POST'])
     @login_required
     def process_get_sent_requests():
@@ -340,6 +342,30 @@ def config_views(app, db, bcrypt):
             return jsonify(sent_requests_list), 200
         else:
             return jsonify({'message': 'No sent requests.'}), 400
+        
+    @app.route('/process-send-friend-request', methods=['POST'])
+    @login_required
+    def process_send_friend_request():
+        data = request.get_json()
+        friend_username = data.get('username')
+        
+        user_id = current_user.id
+        friend_id = User.query.filter_by(username=friend_username).first().id
+        
+        if \
+        Friendship.query.filter_by(user_id=user_id, friend_id=friend_id).first() or \
+        Friendship.query.filter_by(user_id=friend_id, friend_id=user_id).first():
+            return jsonify({'message': 'Friend request already sent.'}), 400
+                    
+        elif user_id == friend_id:
+            return jsonify({'message': 'Cannot send friend request to yourself.'}), 400
+        
+        else:
+            new_friend_request = Friendship(user_id=user_id, friend_id=friend_id)
+            db.session.add(new_friend_request)
+            db.session.commit()
+            return jsonify({'message': 'Friend request sent.'}), 200
+
 
     @app.route('/process-user_id-search-coords', methods=['POST'])
     @login_required

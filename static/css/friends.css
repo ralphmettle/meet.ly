@@ -23,6 +23,7 @@ body {
     height: 200px
     
 }
+
 .user-card {
     display: flex;
     flex-direction: row;
@@ -57,6 +58,44 @@ body {
 }
 
 .user_info-container p {
+    color: white;
+    margin: 2px
+}
+
+.friend-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    background-color: var(--secondary-color);
+    box-shadow: 0 0px 10px rgba(0,0,0,0.2);
+    width: 300px;
+    height: 100px;
+}
+
+.friend-card img {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 10px;
+    margin-right: 10px
+}
+
+.friend_info-container {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+.friend_info-container h3 {
+    color: white;
+    margin: 2px
+}
+
+.friend_info-container p {
     color: white;
     margin: 2px
 }
