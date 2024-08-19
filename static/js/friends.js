@@ -170,8 +170,7 @@ async function loadFriendRequestCount() {
     } else {
         friendRequestCounter.hidden = false
         friendRequestCounter.innerHTML = `${count} friend requests`;
-    }
-    
+    }  
 }
 
 document.addEventListener('DOMContentLoaded', function() {
