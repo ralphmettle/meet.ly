@@ -553,6 +553,30 @@ def config_views(app, db, bcrypt):
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
         
+    @app.route('/process-get-hangouts', methods=['POST'])
+    @login_required
+    def process_get_hangouts():
+        user_id = current_user.id
+        hangouts = Hangout.query.filter_by(user_id=user_id).all()
+        
+        hangouts_list = [
+            {
+                'id': hangout.id,
+                'name': hangout.name,
+                'place_name': hangout.place_name,
+                'place_address': hangout.place_address,
+                'place_review_summary': hangout.place_review_summary,
+                'place_photo_url': hangout.place_photo_url,
+                'place_maps_link': hangout.place_maps_link
+            }
+            for hangout in hangouts
+        ]
+
+        if hangouts_list:
+            return jsonify(hangouts_list), 200
+        else:
+            return jsonify({'message': 'No hangouts found.'}), 400
+        
     #TESTING
     @app.route('/process-get-location_cluster', methods=['POST'])
     @login_required

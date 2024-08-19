@@ -70,6 +70,8 @@ class Hangout(db.Model):
     place_maps_link = db.Column(db.String, nullable=False)
 
     date_created = db.Column(db.DateTime, default=db.func.now(), nullable=False)
+
+    attendees = db.relationship('HangoutAttendee', back_populates='hangout')
     
     def __repr__(self):
         return f'id: {self.id};'
@@ -83,14 +85,28 @@ class HangoutAttendee(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     status = db.Column(db.Enum('pending', 'accepted', 'rejected'), default='pending', nullable=False)
 
-    hangout = db.relationship('Hangout', backref='attendees', lazy=True)
+    hangout = db.relationship('Hangout', back_populates='attendees', lazy=True)
     user = db.relationship('User', backref='hangouts', lazy=True)
 
-    __table_args__ = (
-        db.UniqueConstraint('id', name='unique_hangoutattendee_id'),
-        db.ForeignKeyConstraint(['hangout_id'], ['hangout.id'], name='fk__hangoutattendee_hangout_id'),
-        db.ForeignKeyConstraint(['user_id'], ['user.id'], name='fk_hangoutattendee_user_id')
-    )
+class Memory(db.Model):
+    __tablename__ = 'memory'
+
+    id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    hangout_id = db.Column(db.Integer, db.ForeignKey('hangout.id'), nullable=False)
+    date_created = db.Column(db.DateTime, default=db.func.now(), nullable=False)
+
+class MemoryData(db.Model):
+    __tablename__ = 'memory_data'
+
+    id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
+
+    memory_id = db.Column(db.Integer, db.ForeignKey('memory.id'), nullable=False)
+    image = db.Column(db.String, nullable=True)
+    text = db.Column(db.String, nullable=True)
+    
+    memory = db.relationship('Memory', backref='data')
 
 class UserLocation(db.Model):
     __tablename__ = 'user_location'
@@ -100,9 +116,9 @@ class UserLocation(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
-
-    user = db.relationship('User', backref='location', lazy=True)
     name = db.Column(db.String, default='location', nullable=False)
+
+    user = db.relationship('User', backref='location')  
 
     def __repr__(self):
         return f'id: {self.id}; user_id: {self.user_id}; latitude: {self.latitude}; longitude: {self.longitude}, name: {self.name}'
