@@ -4,7 +4,7 @@ document.getElementById('user_search-form').addEventListener('submit', async fun
     event.preventDefault()
 
     const search_result = await searchUser();
-    let display_result = await displayUsers(search_result);
+    let display_result = await displayUsers(search_result, 'search-result', true);
 });
 
 async function searchUser() {
@@ -33,17 +33,17 @@ async function searchUser() {
 }
 
 // Function incomplete; no relevant route or logic
-async function displayUsers(search_result) {
-    const searchResultContainer = document.getElementById('search-result');
-    searchResultContainer.innerHTML = '';
-    searchResultContainer.hidden = false;
+async function displayUsers(user_list, container_id, addFriend) {
+    const container = document.getElementById(container_id);
+    container.innerHTML = '';
+    container.hidden = false;
 
-    if (!search_result || search_result.length === 0) {
-        searchResultContainer.innerHTML = 'No users found.';
+    if (!user_list || user_list.length === 0) {
+        container.innerHTML = 'No users found.';
         return;
     }
 
-    search_result.forEach(function (user) {
+    user_list.forEach(function (user) {
         let userCard = document.createElement('div');
         userCard.className = 'user-card';
         userCard.id = 'user-card';
@@ -56,15 +56,57 @@ async function displayUsers(search_result) {
             profilePicture = `static/images/profile_pictures/${profilePicture}`;
         }
 
-        userCard.innerHTML = `
-            <img src="${profilePicture}" id="profile-picture" alt="Profile Picture">
-            <div class="user_info-container" id="user-info">
-                <h3>@${user.username}</h3>
-                <p>${user.firstname} ${user.lastname}</p>
-            </div>
-            <button class="btn btn-primary">Add Friend</button>
-        `;
+        if (addFriend === true) {
+            userCard.innerHTML = `
+                <img src="${profilePicture}" id="profile-picture" alt="Profile Picture">
+                <div class="user_info-container" id="user-info">
+                    <h3>@${user.username}</h3>
+                    <p>${user.firstname} ${user.lastname}</p>
+                </div>
+                <button class="btn btn-primary">Add Friend</button>
+            `;
 
-        searchResultContainer.appendChild(userCard);
+            container.appendChild(userCard);
+        } else {
+            userCard.innerHTML = `
+                <img src="${profilePicture}" id="profile-picture" alt="Profile Picture">
+                <div class="user_info-container" id="user-info">
+                    <h3>@${user.username}</h3>
+                    <p>${user.firstname} ${user.lastname}</p>
+                </div>
+            `;
+
+            container.appendChild(userCard);
+        }
     });
 }
+
+async function getFriends() {
+    const get_response = await fetch('/process-get-friends', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const friends_list = await get_response.json();
+
+    if (debug) {
+        console.log(friends_list);
+    }
+
+    return friends_list;
+}
+
+async function loadFriendsList() {
+    const friends_list = await getFriends();
+    let display_result = await displayUsers(friends_list, 'friends-list', false);
+
+    if (debug) {
+        console.log(display_result);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadFriendsList();
+});

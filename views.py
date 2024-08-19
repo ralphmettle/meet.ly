@@ -7,7 +7,7 @@ from flask import flash, jsonify, render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, current_user, login_required
 from location_clustering import coordinate_builder, location_clustering
 from gpt_api import client, MODEL
-from models import User, UserLocation, Friendship
+from models import User, UserLocation, Friendship, Hangout, HangoutAttendee
 from sqlalchemy import or_
 
 places_api_key = "AIzaSyDsqXAw5paGfj1xv-SvrJgOcaowqEo9W6Y"
@@ -202,6 +202,39 @@ def config_views(app, db, bcrypt):
 
     def get_id_from_username(username):
         return User.query.filter_by(username=username).first().id
+
+    def get_friends(user_id):
+        user = db.session.get(User, user_id)
+
+        if user:
+            friends = user.friends + user.friend_of
+
+            if not friends:
+                return None
+            else:
+                return friends
+
+    def get_friend_requests(user_id):
+        user = db.session.get(User, user_id)
+
+        if user:
+            friend_requests = user.friend_requests
+
+            if not friend_requests:
+                return None
+            else:
+                return friend_requests
+
+    def get_sent_requests(user_id):
+        user = db.session.get(User, user_id)
+
+        if user:
+            sent_requests = user.sent_requests
+
+            if not sent_requests:
+                return None
+            else:
+                return sent_requests
     
     @app.route('/process-search-user', methods=['POST'])
     @login_required
@@ -245,39 +278,68 @@ def config_views(app, db, bcrypt):
         user_id = current_user.id
         friend_id = User.query.filter_by(username=friend_username).first().id
         
-        def existing_friendship(user_id, friend_id):
-            user_sender = Friendship.query.filter(
-                Friendship.sender_id == user_id,
-                Friendship.recipient_id == friend_id
-            ).first()
-
-            user_recipient = Friendship.query.filter(
-                Friendship.sender_id == friend_id,
-                Friendship.recipient_id == user_id
-            ).first()
-
-            if user_sender or user_recipient:
-                return True
-            else:
-                return False
-             
-        if user_id and friend_id:
-            if not existing_friendship(user_id, friend_id):
-                new_friendship = Friendship(sender_id=user_id, recipient_id=friend_id)
-                db.session.add(new_friendship)
-                db.session.commit()
-
-            return jsonify({'message': 'Friend request sent.'}), 200
-        else:
-            return jsonify({'message': 'No username provided.'}), 400
-        
     @app.route('/process-get-friends', methods=['POST'])
     @login_required
     def process_get_friends():
         user_id = current_user.id
+        friends = get_friends(user_id)
         
-        pass
+        friends_list = [
+            {
+                'username': friend.username,
+                'firstname': friend.firstname,
+                'lastname': friend.lastname,
+                'profile_picture': friend.profile_picture
+            }
+            for friend in friends
+        ]
 
+        if friends_list:
+            return jsonify(friends_list), 200
+        else:
+            return jsonify({'message': 'No friends added.'}), 400
+        
+    @app.route('/process-get-friend-requests', methods=['POST'])
+    @login_required
+    def process_get_friend_requests():
+        user_id = current_user.id
+        friend_requests = get_friend_requests(user_id)
+        
+        friend_requests_list = [
+            {
+                'username': friend.username,
+                'firstname': friend.firstname,
+                'lastname': friend.lastname,
+                'profile_picture': friend.profile_picture
+            }
+            for friend in friend_requests
+        ]
+
+        if friend_requests_list:
+            return jsonify(friend_requests_list), 200
+        else:
+            return jsonify({'message': 'No friend requests.'}), 400
+        
+    @app.route('/process-get-sent-requests', methods=['POST'])
+    @login_required
+    def process_get_sent_requests():
+        user_id = current_user.id
+        sent_requests = get_sent_requests(user_id)
+        
+        sent_requests_list = [
+            {
+                'username': friend.username,
+                'firstname': friend.firstname,
+                'lastname': friend.lastname,
+                'profile_picture': friend.profile_picture
+            }
+            for friend in sent_requests
+        ]
+
+        if sent_requests_list:
+            return jsonify(sent_requests_list), 200
+        else:
+            return jsonify({'message': 'No sent requests.'}), 400
 
     @app.route('/process-user_id-search-coords', methods=['POST'])
     @login_required
@@ -442,7 +504,54 @@ def config_views(app, db, bcrypt):
                 }
 
         return jsonify(photo_responses), 200  # Correctly return the 'photo_responses' dictionary
+    
+    @app.route('/process-add-hangout', methods=['POST'])
+    @login_required
+    def process_add_hangout():
+        try:
+            data = request.get_json()
+            hangout_name = data.get('hangoutName')
+            place_id = data.get('placeId')
+            place_name = data.get('placeName')
+            place_address = data.get('placeAddress')
+            place_review_summary = data.get('placeReviewSummary')
+            place_photo_url = data.get('placePhotoUrl')
+            place_maps_link = data.get('placeMapsLink')
 
+            user_id = current_user.id
+            is_creator = True
+
+            new_hangout = Hangout(
+                user_id=user_id,
+                is_creator=is_creator,
+                name = hangout_name,
+                place_name=place_name,
+                place_address=place_address,
+                place_review_summary=place_review_summary,
+                place_id=place_id,
+                place_photo_url=place_photo_url,
+                place_maps_link=place_maps_link
+            )
+
+            db.session.add(new_hangout)
+            db.session.flush()
+            
+            invitees = data.get('invitees')
+
+            if invitees:
+                invitee_ids = [get_id_from_username(username) for username in invitees]
+                invitee_ids.append(user_id)
+                
+                for invitee_id in invitee_ids:
+                    new_invitee = HangoutAttendee(hangout_id=new_hangout.id, user_id=invitee_id)
+                    db.session.add(new_invitee)
+                    
+            db.session.commit()
+            return jsonify({'message': 'Hangout created successfully.'}), 200
+        
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': str(e)}), 500
         
     #TESTING
     @app.route('/process-get-location_cluster', methods=['POST'])

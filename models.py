@@ -23,7 +23,17 @@ class User(db.Model, UserMixin):
         secondary='friendship',
         primaryjoin='and_(User.id==Friendship.user_id, Friendship.accepted==True)',
         secondaryjoin='and_(User.id==Friendship.friend_id, Friendship.accepted==True)',
-        backref='friend_of'
+        backref='friend_of',
+        viewonly=True
+    )
+
+    friend_requests = db.relationship(
+        'User',
+        secondary='friendship',
+        primaryjoin='and_(User.id==Friendship.friend_id, Friendship.accepted==False)',
+        secondaryjoin='and_(User.id==Friendship.user_id, Friendship.accepted==False)',
+        backref='sent_requests',
+        viewonly=True
     )
     
     def __repr__(self): 
@@ -33,13 +43,15 @@ class Friendship(db.Model):
     __tablename__ = 'friendship'
     
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
+
     user_id  = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     friend_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
     accepted = db.Column(db.Boolean, default=False, nullable=False)
-    date_created = db.Column(db.DateTime, default=db.func.now, nullable=False)
+    date_created = db.Column(db.DateTime, default=db.func.now(), nullable=False)
 
     def __repr__(self):
-        return f'user_id: {self.user_id}; friend_id: {self.friend_id}; status: {self.status}'
+        return f'id: {self.id}; user_id: {self.user_id}; friend_id: {self.friend_id}; accepted: {self.accepted}'
 
 class Hangout(db.Model):
     __tablename__ = 'hangout'
@@ -48,12 +60,17 @@ class Hangout(db.Model):
     
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     is_creator = db.Column(db.Boolean, default=False, nullable=False)
-    venuelocation_id = db.Column(db.Integer, db.ForeignKey('venue_location.id'), nullable=False) 
     name = db.Column(db.String, nullable=False)
 
-    description = db.Column(db.String, default=None)
-    date_created = db.Column(db.DateTime, default=db.func.now, nullable=False)
+    place_name = db.Column(db.String, nullable=False)
+    place_address = db.Column(db.String, nullable=False)
+    place_review_summary = db.Column(db.String, nullable=True)
+    place_id = db.Column(db.String, nullable=False)
+    place_photo_url = db.Column(db.String, nullable=True)
+    place_maps_link = db.Column(db.String, nullable=False)
 
+    date_created = db.Column(db.DateTime, default=db.func.now(), nullable=False)
+    
     def __repr__(self):
         return f'id: {self.id};'
     
@@ -63,15 +80,24 @@ class HangoutAttendee(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
 
     hangout_id = db.Column(db.Integer, db.ForeignKey('hangout.id'), nullable=False)
-    user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     status = db.Column(db.Enum('pending', 'accepted', 'rejected'), default='pending', nullable=False)
+
+    hangout = db.relationship('Hangout', backref='attendees', lazy=True)
+    user = db.relationship('User', backref='hangouts', lazy=True)
+
+    __table_args__ = (
+        db.UniqueConstraint('id', name='unique_hangoutattendee_id'),
+        db.ForeignKeyConstraint(['hangout_id'], ['hangout.id'], name='fk__hangoutattendee_hangout_id'),
+        db.ForeignKeyConstraint(['user_id'], ['user.id'], name='fk_hangoutattendee_user_id')
+    )
 
 class UserLocation(db.Model):
     __tablename__ = 'user_location'
 
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
 
-    user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
 
@@ -80,13 +106,3 @@ class UserLocation(db.Model):
 
     def __repr__(self):
         return f'id: {self.id}; user_id: {self.user_id}; latitude: {self.latitude}; longitude: {self.longitude}, name: {self.name}'
-
-class VenueLocation(db.Model):
-    __tablename__ = 'venue_location'
-
-    id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
-
-    name = db.Column(db.String, nullable=False)
-    latitude = db.Column(db.Float, nullable=False)
-    longitude = db.Column(db.Float, nullable=False)
-    place_id = db.Column(db.String, nullable=False)

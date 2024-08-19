@@ -1,7 +1,6 @@
 from app import create_app, db
-from models import User, UserLocation
+from models import User, UserLocation, Friendship
 from flask_bcrypt import Bcrypt
-from uuid import uuid4
 
 def add_test_user():
     app = create_app()
@@ -13,7 +12,6 @@ def add_test_user():
         if not test:
             # Create the test user
             dev_test_user = User(
-                id=str(uuid4()),  # Generate a new UUID for the user ID
                 username='dev_test',
                 email='dev_test@test.com',
                 password=bcrypt.generate_password_hash('dev_test').decode('utf-8'),
@@ -33,7 +31,6 @@ def add_test_user():
         user = User.query.filter_by(username='test').first()
         if not user:
             user = User(
-                    id=str(uuid4()),  # Generate a new UUID for the user ID
                     username='test',
                     email='test@test.com',
                     password=bcrypt.generate_password_hash('test').decode('utf-8'),
@@ -97,7 +94,7 @@ def add_dummy_users():
                 dummy = User.query.filter_by(username=user).first()
                 if not dummy:
                     dummy_user = User(
-                        id=str(uuid4()),
+                        
                         username=user,
                         email=f'{user}@test.com',
                         password=bcrypt.generate_password_hash(user).decode('utf-8'),
@@ -118,7 +115,6 @@ def add_dummy_users():
                 user = User.query.filter_by(username=user).first()
                 if user:
                     dummy_location = UserLocation(
-                        id=str(uuid4()),
                         user_id=user.id,
                         latitude=location[0],
                         longitude=location[1]
@@ -169,6 +165,134 @@ def test_user_welcome():
         else:
             print('test user does not exist.')
 
+def test_friendships():
+    app = create_app()
+
+    with app.app_context():
+        johndoe = User.query.filter_by(username='johndoe').first()
+        janedoe = User.query.filter_by(username='janedoe').first()
+        timsmith = User.query.filter_by(username='timsmith').first()
+        tinasmith = User.query.filter_by(username='tinasmith').first()
+
+        friendships = [
+            (johndoe, janedoe),
+            (johndoe, timsmith),
+            (johndoe, tinasmith),
+            (janedoe, timsmith),
+            (janedoe, tinasmith),
+            (timsmith, tinasmith),
+        ]
+
+        for friendship in friendships:
+            check_friendship = Friendship.query.filter_by(
+                user_id=friendship[0].id,
+                friend_id=friendship[1].id
+            ).first()
+            if not check_friendship:
+                new_friendship = Friendship(
+                    user_id=friendship[0].id,
+                    friend_id=friendship[1].id
+                )
+                db.session.add(new_friendship)
+                db.session.commit()
+                print(f'Friendship between {friendship[0].username} and {friendship[1].username} created.')
+            else:
+                print(f'Friendship between {friendship[0].username} and {friendship[1].username} already exists.')
+
+def delete__test_friendships():
+    app = create_app()
+
+    with app.app_context():
+        friendships = Friendship.query.all()
+        if friendships:
+            for friendship in friendships:
+                db.session.delete(friendship)
+            db.session.commit()
+            print('Friendships deleted.')
+        else:
+            print('Friendships do not exist.')
+
+def test_user_friendships():
+    app = create_app()
+
+    with app.app_context():
+        test = User.query.filter_by(username='test').first()
+        johndoe = User.query.filter_by(username='johndoe').first()
+        janedoe = User.query.filter_by(username='janedoe').first()
+
+        friendships = [
+            (test, johndoe),
+            (test, janedoe),
+        ]
+
+        for friendship in friendships:
+            check_friendship = Friendship.query.filter_by(
+                user_id=friendship[0].id,
+                friend_id=friendship[1].id
+            ).first()
+            if not check_friendship:
+                new_friendship = Friendship(
+                    user_id=friendship[0].id,
+                    friend_id=friendship[1].id,
+                    accepted=True
+                )
+                db.session.add(new_friendship)
+                db.session.commit()
+                print(f'Friendship between {friendship[0].username} and {friendship[1].username} created.')
+            else:
+                print(f'Friendship between {friendship[0].username} and {friendship[1].username} already exists.')
+
+def get_user_friends(user_id):
+    app = create_app()
+
+    with app.app_context():
+        user = db.session.get(User, user_id)
+        
+        if user:
+            friends = user.friends + user.friend_of
+
+            if not friends:
+                return {'error': 'User has no friends.'}
+
+            friends_list = [{'id': friend.id, 'username': friend.username} for friend in friends]
+            return friends_list
+        else:
+            return {'error': 'User not found'}
+        
+def get_user_friend_requests(user_id):
+    app = create_app()
+
+    with app.app_context():
+        user = db.session.get(User, user_id)
+        
+        if user:
+            friend_requests = user.friend_requests
+
+            if not friend_requests:
+                return {'error': 'User has no friend requests.'}
+
+            friend_requests_list = [{'id': friend.id, 'username': friend.username} for friend in friend_requests]
+            return friend_requests_list
+        else:
+            return {'error': 'User not found'}
+        
+def get_user_sent_requests(user_id):
+    app = create_app()
+
+    with app.app_context():
+        user = db.session.get(User, user_id)
+        
+        if user:
+            sent_requests = user.sent_requests
+
+            if not sent_requests:
+                return {'error': 'User has not sent any friend requests.'}
+
+            sent_requests_list = [{'id': friend.id, 'username': friend.username} for friend in sent_requests]
+            return sent_requests_list
+        else:
+            return {'error': 'User not found'}
+
 def add_test():
     if __name__ == '__main__':
         add_test_user()
@@ -189,4 +313,25 @@ def delete_dummy():
     if __name__ == '__main__':
         delete_dummy_users()
 
-add_dummy()
+def add_friendships():
+    if __name__ == '__main__':
+        test_friendships()
+
+def delete_friendships():
+    if __name__ == '__main__':
+        delete__test_friendships()
+
+def add_test_friends():
+    if __name__ == '__main__':
+        test_user_friendships()
+
+def get_friends(num):
+    if __name__ == '__main__':
+        print('User friends:')
+        print(get_user_friends(num))
+        print('User friend requests:')
+        print(get_user_friend_requests(num))
+        print('User sent requests:')
+        print(get_user_sent_requests(num))
+
+get_friends(3)

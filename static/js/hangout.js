@@ -262,3 +262,29 @@ document.getElementById('next-images').addEventListener('click', function () {
     }
     showPlaceImages();
 });
+
+async function addHangout() {
+    const hangoutName = document.getElementById('hangout_name').value;
+    const placeId = document.getElementById('place_image').dataset.placeId;
+    const placeName = document.getElementById('place_name').textContent;
+    const placeAddress = document.getElementById('place_address').textContent;
+    const placeReviewSummary = document.getElementById('place_review_summary').textContent;
+    const placePhotoUrl = document.getElementById('place_image').src;
+    const placeMapsLink = document.getElementById('place_maps_link').href;
+
+    const add_response = await fetch('/add-hangout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ hangoutName, placeId, placeName, placeAddress, placeReviewSummary, placePhotoUrl, placeMapsLink }),
+    });
+
+    const response = await add_response.json();
+
+    if (debug) {
+        console.log(response);
+    }
+
+    return response;
+}
