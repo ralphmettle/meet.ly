@@ -366,6 +366,41 @@ def config_views(app, db, bcrypt):
             db.session.commit()
             return jsonify({'message': 'Friend request sent.'}), 200
 
+    @app.route('/process-accept-friend-request', methods=['POST'])
+    @login_required
+    def process_accept_friend_request():
+        data = request.get_json()
+        friend_username = data.get('username')
+        
+        user_id = current_user.id
+        friend_id = User.query.filter_by(username=friend_username).first().id
+        
+        friend_request = Friendship.query.filter_by(user_id=friend_id, friend_id=user_id).first()
+        
+        if friend_request:
+            friend_request.accepted = True
+            db.session.commit()
+            return jsonify({'message': 'Friend request accepted.'}), 200
+        else:
+            return jsonify({'message': 'No friend request found.'}), 400
+        
+    @app.route('/process-decline-friend-request', methods=['POST'])
+    @login_required
+    def process_decline_friend_request():
+        data = request.get_json()
+        friend_username = data.get('username')
+        
+        user_id = current_user.id
+        friend_id = User.query.filter_by(username=friend_username).first().id
+        
+        friend_request = Friendship.query.filter_by(user_id=friend_id, friend_id=user_id).first()
+        
+        if friend_request:
+            db.session.delete(friend_request)
+            db.session.commit()
+            return jsonify({'message': 'Friend request declined.'}), 200
+        else:
+            return jsonify({'message': 'No friend request found.'}), 400
 
     @app.route('/process-user_id-search-coords', methods=['POST'])
     @login_required
