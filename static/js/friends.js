@@ -32,7 +32,6 @@ async function searchUser() {
     return search_result;
 }
 
-// Function incomplete; no relevant route or logic
 async function displayUsers(user_list, container_id) {
     const container = document.getElementById(container_id);
     container.innerHTML = '';

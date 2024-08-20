@@ -67,6 +67,64 @@ async function submitPrompt() {
     return keywords;
 }
 
+const friendSearchInput = document.getElementById('invitee-input');
+
+async function searchFriends(search) {
+    const search_response = await fetch('/process-search-friends', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ search }),
+    });
+
+    const response = await search_response.json();
+
+    if (debug) {
+        console.log(response);
+    }
+
+    return response;
+}
+
+async function displayUsers(user_list) {
+    const container = document.getElementById('invitee-list');
+    container.innerHTML = '';
+
+    if (user_list.length === 0) {
+        container.innerHTML = 'No results.';
+        return;
+    }
+
+    user_list.forEach(function (user) {
+        const profilePicture = `../static/images/profile_pictures/${user.profile_picture}` ||
+        '../static/images/profile_pictures/profile-picture_default.png';
+
+        const inviteeCard = document.createElement('div');
+        inviteeCard.className = 'invitee-card';
+        inviteeCard.id = `${user.username}`;
+
+        inviteeCard.innerHTML = `
+            <img src="${profilePicture}" id="profile-picture" alt="Profile Picture">
+            <div class="friend_request_info-container" id="user-info">
+                <h3>@${user.username}</h3>
+                <p>${user.firstname} ${user.lastname}</p>
+            </div>
+            <button class="btn btn-invite" id="invite-button" data-user="${user.username}">Invite</button>
+        `;
+
+        container.appendChild(inviteeCard);
+    });
+
+    // Add event listener to the invite button
+    // addSearchListeners();
+}
+
+friendSearchInput.addEventListener('input', async function () {
+    const search_response = await searchFriends(friendSearchInput.value);
+    displayUsers(search_response);
+});
+
 async function searchPrompt(keywords) {
     if (!keywords) {
         alert('No keywords were found, please enter a prompt.');
@@ -197,7 +255,6 @@ async function getPlacePhoto(placeId, placeName) {
                     containerDiv.dataset.lng = place.geometry.location.lng();
                     containerDiv.dataset.photoUrl = photoUrl;
 
-                    // Append elements to the container
                     containerDiv.appendChild(imgElement);
                     containerDiv.appendChild(labelElement);
                     containerDiv.appendChild(addressElement);

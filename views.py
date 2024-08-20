@@ -251,8 +251,6 @@ def config_views(app, db, bcrypt):
             )
         ).all()
         
-        print(results)
-        
         # Return a list of dictionaries containing the username, first name, and last name of each user
         return_users = [
             {
@@ -613,6 +611,34 @@ def config_views(app, db, bcrypt):
         except Exception as e:
             db.session.rollback()
             return jsonify({'error': str(e)}), 500
+        
+    @app.route('/process-search-friends', methods=['POST'])
+    @login_required
+    def process_search_friends():
+        data = request.get_json()
+        search = data.get('search')
+
+        if not search:
+            return jsonify({'message': 'No query provided.'}), 400
+        
+        friends = get_friends(current_user.id)
+
+        if friends:
+            friends_list = [
+                {
+                    'username': friend.username,
+                    'firstname': friend.firstname,
+                    'lastname': friend.lastname,
+                    'profile_picture': friend.profile_picture
+                }
+                for friend in friends
+                if search.lower() in friend.username.lower()
+            ]
+            return jsonify(friends_list), 200
+        else:
+            friends_list = None
+            return jsonify({'message': 'No friends found.'}), 400
+
         
     @app.route('/process-get-hangouts', methods=['POST'])
     @login_required

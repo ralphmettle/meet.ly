@@ -19,7 +19,6 @@
             </div>
             <div class="hangout_title">
                 <h2 contenteditable="true" id="hangout_name">Hangout Name (Edit me!)</h2>
-                <!-- I want this to be editable and be submitted as the title of the hangout for when it is stored in the database -->
             </div>
         </div>
         <div class="invitee-container">
@@ -27,9 +26,10 @@
                 <i class="fa-solid fa-user"></i>
             </div>
             <h3>Invitees:</h3>
-            <input type="text" id="invitee-input" placeholder="Enter name or username">
-            <!-- A box here that you can type someone's name in, if they are a user of the app suggest autocomplete from friends list, otherwise can manually input name of someone that doesn't use the app -->
-            <!-- Once a name/username has been input and submitted, it should persist as a rounded box with the name of the user inside of it -->
+            <form type="text" id="invitee-input-form" placeholder="Enter name or username">
+                <input type="text" id="invitee-input" placeholder="Enter name or username">
+            </form>
+            <div class="invitee_list-container" id="invitee-list"></div>
         </div>
         <div class="location-container">
             <h3>Where would you like to go?</h3>
