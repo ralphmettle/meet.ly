@@ -79,9 +79,11 @@ async function displayUsers(user_list, container_id) {
                     <h3>@${user.username}</h3>
                     <p>${user.firstname} ${user.lastname}</p>
                 </div>
+                <button class="btn btn-remove" id="remove-button" data-user=${user.username}>Remove</button>
             `;
 
             container.appendChild(friendCard);
+            addFriendRequestListneners();
         } else if (container_id === 'friend-requests-list-display') {
             let friendRequestCard = document.createElement('div');
             friendRequestCard.className = 'friend-request-card';
@@ -154,61 +156,112 @@ function addSendRequestListeners(username) {
         if (debug) {
             console.log(add_result);
         }
+
+        alert(`Friend request sent to: ${username}!`);
     });
 }
 
 function addFriendRequestListneners() {
-    const accept_button = document.getElementById('accept-button');
-    const decline_button = document.getElementById('decline-button');
+    const accept_buttons = document.querySelectorAll('.btn-accept');
+    const decline_buttons = document.querySelectorAll('.btn-decline');
+    const remove_buttons = document.querySelectorAll('.btn-remove');
 
-    accept_button.addEventListener('click', async function (event) {
-        event.preventDefault();
+    accept_buttons.forEach(function (button) {
+        button.addEventListener('click', async function (event) {
+            event.preventDefault();
 
-        const username = event.target.dataset.user;
+            const username = event.target.dataset.user;
 
-        if (debug) {
-            console.log(username);
-        }
+            if (debug) {
+                console.log(username);
+            }
 
-        const accept_response = await fetch('/process-accept-friend-request', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username }),
+            const accept_response = await fetch('/process-accept-friend-request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username }),
+            });
+
+            const accept_result = await accept_response.json();
+
+            if (debug) {
+                console.log(accept_result);
+            }
+
+            event.target.closest('.friend-request-card').remove();
+            loadFriendRequestCount();
+            loadFriendsList();
+
+            const remainingRequests = document.querySelectorAll('.friend-request-card').length;
+            if (remainingRequests === 0) {
+                document.getElementById('friend-requests-list').style.display = 'none';
+            }
         });
-
-        const accept_result = await accept_response.json();
-
-        if (debug) {
-            console.log(accept_result);
-        }
     });
 
-    decline_button.addEventListener('click', async function (event) {
-        event.preventDefault();
+    decline_buttons.forEach(function (button) {
+        button.addEventListener('click', async function (event) {
+            event.preventDefault();
 
-        const username = event.target.dataset.user;
+            const username = event.target.dataset.user;
 
-        if (debug) {
-            console.log(username);
-        }
+            if (debug) {
+                console.log(username);
+            }
 
-        const decline_response = await fetch('/process-decline-friend-request', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username }),
+            const decline_response = await fetch('/process-decline-friend-request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username }),
+            });
+
+            const decline_result = await decline_response.json();
+
+            if (debug) {
+                console.log(decline_result);
+            }
+
+            event.target.closest('.friend-request-card').remove();
+            loadFriendRequestCount();
         });
+    });
 
-        const decline_result = await decline_response.json();
+    remove_buttons.forEach(function (button) {
+        button.addEventListener('click', async function (event) {
+            event.preventDefault();
 
-        if (debug) {
-            console.log(decline_result);
-        }
+            const username = event.target.dataset.user;
+
+            if (debug) {
+                console.log(username);
+            }
+
+            const remove_response = await fetch('/process-remove-friend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username }),
+            });
+
+            const remove_result = await remove_response.json();
+
+            if (debug) {
+                console.log(remove_result);
+            }
+
+            event.target.closest('.friend-card').remove();
+            loadFriendRequestCount();
+            loadFriendsList();
+        });
     });
 }
+
+
 
 async function countRequests() {
     const count_response = await fetch('/process-count-friend-requests', {
@@ -240,6 +293,9 @@ async function loadFriendRequestCount() {
         friendRequestCounter.innerHTML = `${count} friend request(s)`;
         friendRequestCounter.addEventListener('click', async function() {
             document.getElementById('friend-requests-list').style.display = 'block';
+            document.getElementById('friend-requests-list-close').addEventListener('click', function() {
+                document.getElementById('friend-requests-list').style.display = 'none';
+            });
             let friendRequests = await getFriendRequests();
             displayUsers(friendRequests, 'friend-requests-list-display');
         });

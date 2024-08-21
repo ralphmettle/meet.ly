@@ -103,6 +103,7 @@ class Memory(db.Model):
     date_created = db.Column(db.DateTime, default=db.func.now(), nullable=False)
 
     hangout = db.relationship('Hangout', back_populates='memories')
+    data = db.relationship('MemoryData', back_populates='memory')
 
 class MemoryData(db.Model):
     __tablename__ = 'memory_data'
@@ -113,7 +114,7 @@ class MemoryData(db.Model):
     image = db.Column(db.String, nullable=True)
     text = db.Column(db.String, nullable=True)
     
-    memory = db.relationship('Memory', backref='data')
+    memory = db.relationship('Memory', back_populates='data')
 
 class UserLocation(db.Model):
     __tablename__ = 'user_location'

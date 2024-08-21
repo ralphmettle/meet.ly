@@ -3,12 +3,12 @@ import hashlib
 import json
 import os
 
-from flask import flash, jsonify, render_template, request, redirect, url_for 
+from flask import flash, jsonify, render_template, request, redirect, url_for, session
 from flask_login import login_user, logout_user, current_user, login_required
 from location_clustering import coordinate_builder, location_clustering
 from gpt_api import client, MODEL
 from datetime import datetime
-from models import User, UserLocation, Friendship, Hangout, HangoutAttendee
+from models import User, UserLocation, Friendship, Hangout, HangoutAttendee, Memory, MemoryData
 from sqlalchemy import or_
 
 places_api_key = "AIzaSyDsqXAw5paGfj1xv-SvrJgOcaowqEo9W6Y"
@@ -108,12 +108,9 @@ def config_views(app, db, bcrypt):
             else:
                 return render_template('welcome.html')
             
-            # Get the profile picture and location of user
-            # Possibly implement logic to select preferred vibes
         elif request.method == 'POST':
-            # Get user profile picture if submitted
-            # Name the file user.ID_profilepicture for storage in the database
             profile_picture = request.files.get('profile_picture')
+            print(profile_picture)
             latitude = request.form.get('latitude')
             longitude = request.form.get('longitude')
             user = current_user
@@ -157,11 +154,6 @@ def config_views(app, db, bcrypt):
     def friends():
         return render_template('friends.html')
     
-    @app.route('/memories')
-    @login_required
-    def memories():
-        return render_template('memories.html')
-    
     @app.route('/hangouts')
     @login_required
     def hangouts():
@@ -184,6 +176,7 @@ def config_views(app, db, bcrypt):
         
         if current_user.id in attendee_user_ids:
             hangout_data = {
+            'id': hangout_id,
             'name': hangout.name,
             'place_name': hangout.place_name,
             'place_address': hangout.place_address,
@@ -203,7 +196,58 @@ def config_views(app, db, bcrypt):
                 if attendee.user_id != current_user.id
             ]
         }
+            session['hangout_data'] = hangout_data
             return render_template('view_hangout.html', hangout=hangout_data)
+        else:
+            return '403 Forbidden', 403
+        
+    @app.route('/hangouts/<hangout_id>/memories')
+    @login_required
+    def memories(hangout_id):
+        hangout = Hangout.query.filter_by(id=hangout_id).first()
+        
+        if not hangout:
+            return redirect(url_for('hangouts'))
+        
+        attendee_user_ids = [attendee.user_id for attendee in hangout.attendees]
+        
+        if current_user.id in attendee_user_ids:
+            memories = hangout.memories
+            memories_data = [
+                {
+                    'id': memory.id,
+                    'image': memory_data.image,
+                    'text': memory_data.text,
+                }
+                for memory in memories
+                for memory_data in memory.data
+            ]
+
+        attendee_user_ids = [attendee.user_id for attendee in hangout.attendees]
+        
+        if current_user.id in attendee_user_ids:
+            hangout_data = {
+            'id': hangout_id,
+            'name': hangout.name,
+            'place_name': hangout.place_name,
+            'place_address': hangout.place_address,
+            'place_review_summary': hangout.place_review_summary,
+            'place_photo_url': hangout.place_photo_url,
+            'place_maps_link': hangout.place_maps_link,
+            'datetime': hangout.datetime.strftime('%A, %d %B %Y at %H:%M'),
+            'attendees': [
+                {
+                    'username': attendee.user.username,
+                    'firstname': attendee.user.firstname,
+                    'lastname': attendee.user.lastname,
+                    'profile_picture': attendee.user.profile_picture,
+                    'status': attendee.status
+                }
+                for attendee in hangout.attendees
+                if attendee.user_id != current_user.id
+            ]
+        }
+            return render_template('memories.html', memories=memories_data, hangout=hangout_data)
         else:
             return '403 Forbidden', 403
 
@@ -221,10 +265,6 @@ def config_views(app, db, bcrypt):
             return extension
         else:
             raise ValueError('No file extension found.')
-    
-    def hashed_string(string):
-        hashed = hashlib.sha256(string.encode())
-        return hashed.hexdigest()
 
     def create_filename(filename, extension):
         return f'{filename}.{extension}'
@@ -234,7 +274,7 @@ def config_views(app, db, bcrypt):
         extensions = {'jpg', 'jpeg', 'png'}
 
         if profile_picture and get_extension(profile_picture.filename) in extensions:
-            filename = create_filename(hashed_string(user.id), get_extension(profile_picture.filename))
+            filename = create_filename(user.username, get_extension(profile_picture.filename))
             file_path = os.path.join(picture_folder, filename)
             print(f"Saving file to: {file_path}")
 
@@ -244,7 +284,21 @@ def config_views(app, db, bcrypt):
         else:
             user.profile_picture = None
             flash('Invalid file type. Please upload a .jpg, .jpeg, or .png file.')
-            pass
+            
+    def process_memory_image(image, memory_id, memory_data_id):
+        picture_folder = 'static\images\memories'
+        allowed_extensions = {'jpg', 'jpeg', 'png'}
+        
+        if image and get_extension(image.filename) in allowed_extensions:
+            filename = create_filename(f'{memory_id}_{memory_data_id}', get_extension(image.filename))
+            file_path = os.path.join(picture_folder, filename)
+            print(f"Saving image to: {file_path}")
+
+            image.save(file_path)
+            return f"{filename}"
+        else:
+            flash('Invalid file type. Please upload a .jpg, .jpeg, or .png file.')
+            return None
 
     def get_id_from_username(username):
         return User.query.filter_by(username=username).first().id
@@ -297,7 +351,6 @@ def config_views(app, db, bcrypt):
             )
         ).all()
         
-        # Return a list of dictionaries containing the username, first name, and last name of each user
         return_users = [
             {
                 'username': user.username,
@@ -306,6 +359,7 @@ def config_views(app, db, bcrypt):
                 'profile_picture': user.profile_picture
             }
             for user in results
+            if user.id != current_user.id
         ]
 
         if return_users:
@@ -445,6 +499,25 @@ def config_views(app, db, bcrypt):
             return jsonify({'message': 'Friend request declined.'}), 200
         else:
             return jsonify({'message': 'No friend request found.'}), 400
+        
+    @app.route('/process-remove-friend', methods=['POST'])
+    @login_required
+    def process_remove_friend():
+        data = request.get_json()
+        friend_username = data.get('username')
+        
+        user_id = current_user.id
+        friend_id = User.query.filter_by(username=friend_username).first().id
+        
+        friendship = Friendship.query.filter_by(user_id=user_id, friend_id=friend_id).first() or \
+                     Friendship.query.filter_by(user_id=friend_id, friend_id=user_id).first()
+        
+        if friendship:
+            db.session.delete(friendship)
+            db.session.commit()
+            return jsonify({'message': 'Friend removed.'}), 200
+        else:
+            return jsonify({'message': 'No friend found.'}), 400
 
     @app.route('/process-user_id-search-coords', methods=['POST'])
     @login_required
@@ -477,8 +550,6 @@ def config_views(app, db, bcrypt):
     @app.route('/process-hangout-prompt', methods=['POST'])
     @login_required
     def process_hangout_prompt():
-        # Get the response from the request JSON object and extract the prompt into 'search_query'
-
         data = request.get_json()
         search_query = data.get('prompt')
 
@@ -610,7 +681,7 @@ def config_views(app, db, bcrypt):
                     'status': 'failed'
                 }
 
-        return jsonify(photo_responses), 200  # Correctly return the 'photo_responses' dictionary
+        return jsonify(photo_responses), 200
     
     @app.route('/process-add-hangout', methods=['POST'])
     @login_required
@@ -785,5 +856,30 @@ def config_views(app, db, bcrypt):
         else:
             return jsonify({'message': 'No invited users.'}), 400
 
-            
+    @app.route('/process-add-memory/', methods=['POST'])
+    @login_required
+    def process_add_memory():
+        hangout_id = request.form.get('hangout_id')
+        image = request.files.get('image')
+        text = request.form.get('text')
+        print(image)
+        print(image.filename)
+        print(hangout_id)
 
+        user_id = current_user.id
+
+        new_memory = Memory(user_id=user_id, hangout_id=hangout_id)
+        db.session.add(new_memory)
+        db.session.flush()
+
+        new_memory_data = MemoryData(memory_id=new_memory.id, text=text)
+        db.session.add(new_memory_data)
+        db.session.flush()
+
+        if image:
+            image_filename = process_memory_image(image, new_memory.id, new_memory_data.id)
+            new_memory_data.image = image_filename
+
+        db.session.commit()
+
+        return jsonify({'message': 'Memory added successfully.'}), 200

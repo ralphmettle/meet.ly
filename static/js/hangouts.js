@@ -46,7 +46,8 @@ async function displayHangouts(hangouts) {
     } else {
         for (const hangout of hangouts) {
             const hangoutDiv = document.createElement('div');
-            hangoutDiv.className = hangout.name;
+            hangoutDiv.className = 'hangout-box';
+            hangoutDiv.id = hangout.name;
 
             const photo = document.createElement('img');
             photo.src = hangout.place_photo_url;

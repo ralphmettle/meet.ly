@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 
 {% block stylesheet %}
-<!-- <link rel = 'stylesheet' href = '{{ url_for("static", filename = "css/view_hangout.css")}}'> -->
+<link rel = 'stylesheet' href = '{{ url_for("static", filename = "css/view_hangout.css")}}'>
 {% endblock %}
 
 {% block head %}
-<h1>{{ hangout.name }}</h1>
+
 {% endblock %}
 
 {% block body %}
 <div class="page-container">
+    <h1>{{ hangout.name }}</h1>
     <div class="hangout-container">
         <img src="{{ hangout.place_photo_url }}" alt="{{ hangout.place_name }}">
         <div class="hangout_info=container">
@@ -37,6 +38,8 @@
             </div>
         </div>
     </div>
+    <a href="{{ url_for('memories', hangout_id=hangout.id) }}" class="memories-button">View Memories</a>
+    <br>
     <a href="{{ url_for('hangouts')}}" class="back-button">Back to Hangouts</a>
 </div>
 

@@ -1,0 +1,163 @@
+:root {
+    --accent-color: #86786f;
+    --accent-color-dark: #534e4a;
+    --accent-color-darker: #161a46;
+    --secondary-color: #ff708f;
+    --secondary-color-light: #ff85aa;
+    --background-color: #f2ebe6;
+    --text-color: #616161;
+    --text-color-dark: #0e0e0e;
+}
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    background-color: var(--background-color);
+    padding: 20px;
+}
+
+h1 {
+    font-size: 300%;
+    margin-bottom: 20px;
+}
+
+.hangout-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.hangout-container img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.hangout_info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding: 10px;
+}
+
+.hangout_info-container h3,
+.hangout_info-container p,
+.hangout_info-container a {
+    margin: 5px 0;
+    padding: 5px;
+    font-size: 100%;
+}
+
+#hangout_address {
+    color: var(--secondary-color);
+    font-size: 150%;
+}
+
+#hangout_datetime {
+    font-weight: bold;
+}
+
+#hangout_summary {
+    text-align: justify;
+}
+
+#hangout_place_url {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-size: 80%;
+}
+
+#hangout_place_url:hover {
+    text-decoration: underline;
+}
+
+.hangout_attendee-container {
+    width: 100%;
+}
+
+.hangout_attendee-container h3 {
+    font-size: 150%;
+    margin-bottom: 10px;
+}
+
+.invitee_list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.attendee-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    max-width: 250px;
+    height: 75px;
+    background-color: white;
+}
+
+.attendee-card img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-top: 12px;
+}
+
+.attendee-card p {
+    margin-right: 5px;
+    font-size: 100%;
+}
+
+.memories-button {
+    padding: 10px;
+    background-color: white;
+    text-decoration: none;
+    color: var(--secondary-color);
+    font-weight: bold;
+    margin-top: 20px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    height: 25px;
+    width: 150px;
+    align-content: center;
+    text-align: center;
+
+}
+
+.back-button {
+    padding: 10px;
+    background-color: white;
+    text-decoration: none;
+    color: var(--secondary-color);
+    font-weight: bold;
+    margin-top: 100px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    height: 25px;
+    width: 150px;
+    align-content: center;
+    text-align: center;
+    align-self: flex-start
+}
