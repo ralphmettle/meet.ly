@@ -15,8 +15,12 @@
                 {% endif %}
             </h1>
             <div class="profile-picture-container">
+                {% if current_user.profile_picture == None %}
+                <img src="{{ url_for('static', filename = 'images/profile_pictures/profile-picture_default.jpg') }}" alt="Profile Picture">
+                {% else %}
                 <img src="{{ url_for('static', filename = 'images/profile_pictures/' + current_user.profile_picture) }}"
                     alt="Profile Picture">
+                {% endif %}
             </div>
             <div class="sidebar-container">
                 <a href="{{ url_for('home') }}">
@@ -25,8 +29,8 @@
                 <a href="{{ url_for('memories') }}">
                     My Memories
                 </a>
-                <a href="{{ url_for('profile') }}">
-                    Scrapbook
+                <a href="{{ url_for('friends') }}">
+                    Friends
                 </a>
                 <a href="{{ url_for('settings') }}">
                     Settings
@@ -35,7 +39,10 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block body %}
+{% endblock %}
 <!-- 
 - Display username
 - Display profile picture

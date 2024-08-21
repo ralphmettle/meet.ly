@@ -29,7 +29,11 @@
             <form type="text" id="invitee-input-form" placeholder="Enter name or username">
                 <input type="text" id="invitee-input" placeholder="Enter name or username">
             </form>
-            <div class="invitee_list-container" id="invitee-list"></div>
+            <div class="invitee_search-container" id="invitee-search"></div>
+            <div class="invitee_list-container">
+                <h3>Invitees:</h3>
+                <div class="invited_list" id="invited-list">Invite a friend!</div>  
+            </div>
         </div>
         <div class="location-container">
             <h3>Where would you like to go?</h3>
@@ -39,7 +43,6 @@
             <div class="location_input-container">
                 <div class="prompt-container">
                     <p>Provide a prompt to search for a venue!</p> <!-- Align this below the header -->
-                    <!-- A text field that a user can input a prompt that the OpenAI API will respond with a JSON object to be used to search Google Places API -->
                     <input type="text" id="prompt" placeholder="Prompt">
                     <button id="prompt-submit">
                         Submit Prompt
@@ -58,22 +61,24 @@
                     <div class="overlay_content-container" id="overlay_content-container">
                         <img id="place_image" src="" alt="Place Image">
                         <h2 id="place_name"></h2>
+                        <p id="place_id" hidden></p>
                         <p id="place_address"></p>
+                        <p id="place_latitude" hidden></p>
+                        <p id="place_longitude" hidden></p>
                         <p id="place_review_summary"></p>
+                        <label for="hangout_datetime">Date and Time:</label>
+                        <input type="datetime-local" id="hangout_datetime">
                         <a id="place_maps_link" href="" target="_blank">View on Google Maps</a>
-                        <button id="confirm_venue-button">Add Hangout</button>
+                        <button id="confirm_hangout-button">Add Hangout</button>
                     </div> 
                 </div>
-                
-                <!-- An input field for the name of a venue, once filled it should fetch and dynamically update the box next to the header with information of the place from OpenStreetMap API with a picture and a description -->
-                <!-- Once a user inputs a venue/location and submits the hangout the venue should be stored in the database so that the user can add a publicly visible rating -->
             </div>
         </div>
     </div>
 </div>
 
 {% block script %}
-<script src = "{{ url_for('static', filename = 'js/hangout.js')}}"></script>
+<script src = "{{ url_for('static', filename = 'js/new_hangout.js')}}"></script>
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsqXAw5paGfj1xv-SvrJgOcaowqEo9W6Y&libraries=places&callback=initAutocomplete"
     async defer></script>

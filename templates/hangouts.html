@@ -14,7 +14,17 @@
         <a href="{{url_for('new_hangout')}}">New Hangout</a>
     </div>
     <div class="hangout_feed-container">
-        <p>Feed</p>
+        <h3>My Hangouts:</h3>
+        <div class="hangout_feed" id="hangout_feed">
+            <p>Loading...</p>
+        </div>
     </div>
+    <br>
+    <a href="{{ url_for('home')}}" class="back-button">Back to Home</a>
 </div>
+
+{% block script %}
+<script src="{{ url_for('static', filename = 'js/hangouts.js') }}"></script>
+{% endblock %}
+
 {% endblock %}

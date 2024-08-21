@@ -7,6 +7,7 @@ from flask import flash, jsonify, render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, current_user, login_required
 from location_clustering import coordinate_builder, location_clustering
 from gpt_api import client, MODEL
+from datetime import datetime
 from models import User, UserLocation, Friendship, Hangout, HangoutAttendee
 from sqlalchemy import or_
 
@@ -132,17 +133,24 @@ def config_views(app, db, bcrypt):
     def forgot_password():
         return f'The forgot password page is not yet implemented.'
         
-    @app.route('/<username>')
+    @app.route('/user/<username>')
     def user(username):
-        user = User.query.filter_by(username=username).first()
+        current_user = User.query.filter_by(username=username).first()
 
-        if user is None:
+        user_data = {
+            'username': current_user.username,
+            'firstname': current_user.firstname,
+            'lastname': current_user.lastname,
+            'profile_picture': current_user.profile_picture,
+        }
+
+        if current_user is None:
             return '404 Not Found', 404
         
         if current_user.is_authenticated and current_user.username == username:
-            return render_template('profile.html', user=user, user_profile = True)
+            return render_template('profile.html', current_user=user_data, user_profile = True)
         else:
-            return render_template('profile.html', user=user, user_profile = False)
+            return render_template('profile.html', current_user=user_data, user_profile = False)
     
     @app.route('/friends')
     @login_required
@@ -164,7 +172,45 @@ def config_views(app, db, bcrypt):
     def new_hangout():
         return render_template('new_hangout.html')
     
+    @app.route('/hangouts/<hangout_id>')
+    @login_required
+    def hangout(hangout_id):
+        hangout = Hangout.query.filter_by(id=hangout_id).first()
+        
+        if not hangout:
+            return redirect(url_for('hangouts'))
+    
+        attendee_user_ids = [attendee.user_id for attendee in hangout.attendees]
+        
+        if current_user.id in attendee_user_ids:
+            hangout_data = {
+            'name': hangout.name,
+            'place_name': hangout.place_name,
+            'place_address': hangout.place_address,
+            'place_review_summary': hangout.place_review_summary,
+            'place_photo_url': hangout.place_photo_url,
+            'place_maps_link': hangout.place_maps_link,
+            'datetime': hangout.datetime.strftime('%A, %d %B %Y at %H:%M'),
+            'attendees': [
+                {
+                    'username': attendee.user.username,
+                    'firstname': attendee.user.firstname,
+                    'lastname': attendee.user.lastname,
+                    'profile_picture': attendee.user.profile_picture,
+                    'status': attendee.status
+                }
+                for attendee in hangout.attendees
+                if attendee.user_id != current_user.id
+            ]
+        }
+            return render_template('view_hangout.html', hangout=hangout_data)
+        else:
+            return '403 Forbidden', 403
 
+    @app.route('/settings')
+    @login_required
+    def settings():
+        return render_template('settings.html')  
 
 
     # Routes and functions for processing data from the front-end
@@ -490,7 +536,9 @@ def config_views(app, db, bcrypt):
 
         data = request.get_json()
         keywords = data.get('keywords')
-        location = [51.5074, -0.1278]
+        location = data.get('coordinateCentroid').get('message')
+
+        print(f'keywords: {keywords}, location: {location}')
 
         # Use the keywords to search the Google Places API
         search_query = '+'.join([keyword.replace(' ', '-') for keyword in keywords])
@@ -536,7 +584,7 @@ def config_views(app, db, bcrypt):
         photo_responses = {}
 
         for place_id, info in place_info.items():
-            photo_reference = info[2]  # Assuming [2] is the photo_reference
+            photo_reference = info[2]
             if photo_reference:
                 try:
                     # Fetch the photo from Google Places API
@@ -575,32 +623,42 @@ def config_views(app, db, bcrypt):
             place_address = data.get('placeAddress')
             place_review_summary = data.get('placeReviewSummary')
             place_photo_url = data.get('placePhotoUrl')
+            place_datetime_string = data.get('placeDateTime')
             place_maps_link = data.get('placeMapsLink')
+            place_latitude = data.get('placeLatitude')
+            place_longitude = data.get('placeLongitude')
 
             user_id = current_user.id
-            is_creator = True
+            place_datetime = datetime.strptime(place_datetime_string, '%Y-%m-%d %H:%M:%S')
+
+            print(f'formatted datetime: {place_datetime}')
 
             new_hangout = Hangout(
                 user_id=user_id,
-                is_creator=is_creator,
+                is_creator=True,
                 name = hangout_name,
+                datetime=place_datetime,
                 place_name=place_name,
                 place_address=place_address,
                 place_review_summary=place_review_summary,
                 place_id=place_id,
                 place_photo_url=place_photo_url,
-                place_maps_link=place_maps_link
+                place_maps_link=place_maps_link,
+                latitude=place_latitude,
+                longitude=place_longitude
             )
 
             db.session.add(new_hangout)
             db.session.flush()
             
-            invitees = data.get('invitees')
+            invitees = data.get('invitee_list')
 
             if invitees:
                 invitee_ids = [get_id_from_username(username) for username in invitees]
-                invitee_ids.append(user_id)
                 
+                creator_invitee = HangoutAttendee(hangout_id=new_hangout.id, user_id=user_id, status='accepted')
+                db.session.add(creator_invitee)
+
                 for invitee_id in invitee_ids:
                     new_invitee = HangoutAttendee(hangout_id=new_hangout.id, user_id=invitee_id)
                     db.session.add(new_invitee)
@@ -644,40 +702,67 @@ def config_views(app, db, bcrypt):
     @login_required
     def process_get_hangouts():
         user_id = current_user.id
-        hangouts = Hangout.query.filter_by(user_id=user_id).all()
-        
+        hangouts = HangoutAttendee.query.filter_by(user_id=user_id).all()
+
         hangouts_list = [
             {
-                'id': hangout.id,
-                'name': hangout.name,
-                'place_name': hangout.place_name,
-                'place_address': hangout.place_address,
-                'place_review_summary': hangout.place_review_summary,
-                'place_photo_url': hangout.place_photo_url,
-                'place_maps_link': hangout.place_maps_link
+                'hangout_id': hangout.hangout_id,
+                'name': hangout.hangout.name,
+                'place_name': hangout.hangout.place_name,
+                'place_address': hangout.hangout.place_address,
+                'place_review_summary': hangout.hangout.place_review_summary,
+                'place_photo_url': hangout.hangout.place_photo_url,
+                'place_maps_link': hangout.hangout.place_maps_link,
+                'latitude': hangout.hangout.latitude,
+                'longitude': hangout.hangout.longitude
             }
             for hangout in hangouts
         ]
 
         if hangouts_list:
-            return jsonify(hangouts_list), 200
+            return jsonify({'hangouts_list': hangouts_list}), 200
         else:
-            return jsonify({'message': 'No hangouts found.'}), 400
+            return jsonify({'hangouts_list': []}), 400
+        
+    @app.route('/process-get-hangout-attendees', methods=['POST'])
+    @login_required
+    def process_get_hangout_attendees():
+        data = request.get_json()
+        hangout_id = data.get('hangout_id')
+
+        print(f'hangout_id: {hangout_id}')
+
+        attendees = HangoutAttendee.query.filter_by(hangout_id=hangout_id).all()
+
+        attendees_list = [
+            {
+                'username': attendee.user.username,
+                'firstname': attendee.user.firstname,
+                'lastname': attendee.user.lastname,
+                'profile_picture': attendee.user.profile_picture,
+                'status': attendee.status
+            }
+            for attendee in attendees
+            if attendee.user_id != current_user.id
+        ]
+
+        if attendees_list:
+            return jsonify(attendees_list), 200
+        else:
+            return jsonify({'message': 'No attendees found.'}), 400
         
     #TESTING
-    @app.route('/process-get-location_cluster', methods=['POST'])
+    @app.route('/process-get-central-coordinates', methods=['POST'])
     @login_required
-    def process_get_location_cluster():
+    def process_get_central_coordinates():
         data = request.get_json()
-        invited_users = data.get('usernames')
+        invited_users = data.get('invitee_list')
         
-        # Get the location of the current user from user_location table by user_id
         user_location = UserLocation.query.filter_by(user_id=current_user.id).first()
         user_coords = [user_location.latitude, user_location.longitude]
 
-        # Get the location info of invited users
         if invited_users:
-            invited_user_info = [
+            invited_user_ids = [
                 [username, User.query.filter_by(username=username).first().id] 
                 for username in invited_users
             ]
@@ -687,18 +772,16 @@ def config_views(app, db, bcrypt):
                     UserLocation.query.filter_by(user_id=user_id).first().latitude,
                     UserLocation.query.filter_by(user_id=user_id).first().longitude
                 ]
-                for username, user_id in invited_user_info
+                for username, user_id in invited_user_ids
             }
             
-            # Combine the user location with the invited user locations
-            invited_user_locations[current_user.username] = user_coords
+            invited_user_coords = list(invited_user_locations.values())
+            invited_user_coords.append(user_coords)
+            print(invited_user_coords)
 
-            coordinate_set = list(invited_user_locations.values())
+            central_coords = location_clustering(invited_user_coords)
 
-            # Get central coordinates via location_clustering function
-            central = location_clustering(coordinate_set)
-
-            return jsonify(central), 200
+            return jsonify({'message': central_coords}), 200
         else:
             return jsonify({'message': 'No invited users.'}), 400
 

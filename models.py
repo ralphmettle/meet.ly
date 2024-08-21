@@ -61,6 +61,7 @@ class Hangout(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     is_creator = db.Column(db.Boolean, default=False, nullable=False)
     name = db.Column(db.String, nullable=False)
+    datetime = db.Column(db.DateTime, default=db.func.now(), nullable=False)
 
     place_name = db.Column(db.String, nullable=False)
     place_address = db.Column(db.String, nullable=False)
@@ -69,9 +70,13 @@ class Hangout(db.Model):
     place_photo_url = db.Column(db.String, nullable=True)
     place_maps_link = db.Column(db.String, nullable=False)
 
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+
     date_created = db.Column(db.DateTime, default=db.func.now(), nullable=False)
 
     attendees = db.relationship('HangoutAttendee', back_populates='hangout')
+    memories = db.relationship('Memory', back_populates='hangout')
     
     def __repr__(self):
         return f'id: {self.id};'
@@ -96,6 +101,8 @@ class Memory(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     hangout_id = db.Column(db.Integer, db.ForeignKey('hangout.id'), nullable=False)
     date_created = db.Column(db.DateTime, default=db.func.now(), nullable=False)
+
+    hangout = db.relationship('Hangout', back_populates='memories')
 
 class MemoryData(db.Model):
     __tablename__ = 'memory_data'

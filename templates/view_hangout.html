@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block stylesheet %}
+<!-- <link rel = 'stylesheet' href = '{{ url_for("static", filename = "css/view_hangout.css")}}'> -->
+{% endblock %}
+
+{% block head %}
+<h1>{{ hangout.name }}</h1>
+{% endblock %}
+
+{% block body %}
+<div class="page-container">
+    <div class="hangout-container">
+        <img src="{{ hangout.place_photo_url }}" alt="{{ hangout.place_name }}">
+        <div class="hangout_info=container">
+            <h3 id="hangout_address">{{ hangout.place_address }}</h3>
+            <p id="hangout_datetime">{{ hangout.datetime }}</p>
+            <p id="hangout_summary">{{ hangout.place_review_summary }}</p>
+            <a href="{{ hangout.place_maps_link }}" id="hangout_place_url">View on Google Maps</a>
+        </div>
+        <div class="hangout_attendee-container">
+            <h3>Invitees:</h3>
+            <div class="invitee_list" id="invitee_list">
+                {% for attendee in hangout.attendees %}
+                <div class="attendee-card" id="{{ attendee.username }}">
+                    <img src="{{ url_for('static', filename='images/profile_pictures/' + attendee.profile_picture) }}" alt="{{ attendee.username }}">
+                    <p>@{{ attendee.username }}</p>
+                    <p>{{ attendee.first_name }} {{ attendee.last_name }}</p>
+                    <p class="status">{% if attendee.status == 'accepted'%}
+                        Attending
+                        {% else %}
+                        Pending
+                        {% endif %}
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <a href="{{ url_for('hangouts')}}" class="back-button">Back to Hangouts</a>
+</div>
+
+{% block script %}
+<!-- <script src="{{ url_for('static', filename = 'js/hangouts.js') }}"></script> -->
+{% endblock %}
+
+{% endblock %}
