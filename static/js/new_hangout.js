@@ -361,10 +361,12 @@ async function loadPlaceAsHangout(placeId, placeName) {
                         document.getElementById('place_longitude').textContent = longitude;
                         document.getElementById('place_review_summary').textContent = summaryText;
                         document.getElementById('hangout_datetime').value = new Date().toISOString().slice(0, 16);
-                        document.getElementById('place_maps_link').href = `https://www.google.com/maps/place/?q=place_id:${placeId}`;                        
+                        document.getElementById('place_maps_link').href = `https://www.google.com/maps/place/?q=place_id:${placeId}`;
+                        showPlaceDetails();                      
                     });
 
                     placeImages.push({ containerDiv });
+
                 } else {
                     console.error(`No photos available for ${placeName}.`);
                 }
@@ -374,6 +376,15 @@ async function loadPlaceAsHangout(placeId, placeName) {
             resolve();
         });
     });
+}
+
+document.getElementById('prompt-submit').addEventListener('click', function() {
+    document.getElementById('prev-images').style.display = 'inline-block';
+    document.getElementById('next-images').style.display = 'inline-block';
+});
+
+function showPlaceDetails() {
+    document.getElementById('place_overlay-container').style.display = 'block';
 }
 
 function showPlaceImages() {

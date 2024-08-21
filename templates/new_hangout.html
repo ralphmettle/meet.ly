@@ -6,12 +6,12 @@
 
 {% block head %}
 <title>Create Hangout</title>
-<h1>Create a new Hangout</h1>
 <script src="https://kit.fontawesome.com/c5e9f26cf9.js" crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block body %}
 <div class="page-container">
+    <h1>Create a new Hangout</h1>
     <div class="form-container">
         <div class="hangout_title-container">
             <div class="pen-icon">
@@ -47,17 +47,16 @@
                     <button id="prompt-submit">
                         Submit Prompt
                     </button>
-                    <button id="prev-images">Previous</button>
-                    <button id="next-images">Next</button>
                     <div class="place_image-container" id="place_image-container"></div>
+                    <button id="prev-images" style="display: none;">Previous</button>
+                    <button id="next-images" style="display: none;">Next</button>
                 </div>
-                <div class="manual_input_container">
+                <!-- <div class="manual_input_container">
                     <p>Or enter a venue name manually:</p> 
-                    <!-- Implement Google Places API Autocomplete -->
                     <input type="text" id="venue-input" placeholder="Enter venue name">
                     <button id="venue-submit">Submit</button>
-                </div>
-                <div class="place_overlay-container" id="place_overlay-container">
+                </div> -->
+                <div class="place_overlay-container" id="place_overlay-container" style="display: none;">
                     <div class="overlay_content-container" id="overlay_content-container">
                         <img id="place_image" src="" alt="Place Image">
                         <h2 id="place_name"></h2>

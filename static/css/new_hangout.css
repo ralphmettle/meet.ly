@@ -1,0 +1,247 @@
+:root {
+    --accent-color: #86786f;
+    --accent-color-dark: #534e4a;
+    --accent-color-darker: #161a46;
+    --secondary-color: #ff708f;
+    --secondary-color-light: #ff85aa;
+    --background-color: #f2ebe6;
+    --text-color: #616161;
+    --text-color-dark: #0e0e0e;
+}
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    background-color: var(--background-color);
+    padding: 20px;
+}
+
+.form-container {
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.hangout_title-container,
+.invitee-container,
+.location-container {
+    margin-bottom: 20px;
+}
+
+.hangout_title-container {
+    display: flex;
+    align-items: center;
+}
+
+.pen-icon {
+    margin-right: 10px;
+}
+
+.hangout_title h2 {
+    margin: 0;
+    padding: 0;
+}
+
+.invitee-container h3,
+.location-container h3 {
+    margin-bottom: 10px;
+}
+
+.location-container h3,
+.location-container i {
+  display: flex;
+  justify-content: center;
+}
+
+.invitee_search-container,
+.invitee_list-container,
+.location_input-container {
+    margin-top: 20px;
+}
+
+.invitee_search-container {
+  display: flex;
+}
+
+.invitee-container,
+.invited_list {
+  display: flex;
+  flex-direction: column;
+}
+
+#invitee-input {
+  display: flex;
+  width: 20%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  align-self: center;
+}
+
+.invitee-card,
+.invited-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    max-width: 250px;
+    height: 75px;
+    background-color: white;
+}
+
+.invitee-card img,
+.invited-card img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.invitee-card h3,
+.invited-card h3 {
+  margin-right: 20px;
+}
+
+
+.invitee-card button {
+  margin-right: 10px;
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.invited-card button {
+  margin-right: 10px;
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 10px 12px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.location_input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.prompt-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.prompt-container p {
+    margin: 0 0 10px;
+    text-align: center;
+}
+
+#prompt {
+    width: 75%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+#prompt-submit {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#prompt-submit:hover {
+    background-color: var(--secondary-color-light);
+}
+
+#prev-images,
+#next-images {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100px;
+}
+
+.place_overlay-container {
+    display: none;
+    width: 100%;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.overlay_content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+#place_image {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+#confirm_hangout-button {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+#place_name {
+  color: var(--secondary-color);
+  font-size: 200%;
+}
+
+#confirm_hangout-button:hover {
+    background-color: var(--secondary-color-light);
+}
+
+#place_maps_link {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-size: 85%;
+    margin-top: 10px;
+}
+
+#place_maps_link:hover {
+    text-decoration: underline;
+}

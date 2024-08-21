@@ -29,21 +29,25 @@
         </div>
     </div>
     <h2>Add a New Memory</h2>
-    <form action="{{ url_for('process_add_memory') }}" method="post" enctype="multipart/form-data">
-        <div class="image_upload-container">
-            <img id="image-preview" src="" alt="Image Preview" style="display: none; max-width: 100%; height: auto; " >
-            <label for="image">Upload Image</label>
-            <input type="file" id="image" name="image" accept="image/png, image/jpeg" style="display: none;" placeholder="Upload Image" onchange="previewImage(event)" required>
-        </div>
-        <div class="text_input-container">
-            <label for="text">Add a caption!</label>
-            <br>
-            <textarea id="text" name="text" rows="4" required></textarea>
-        </div>
-        <input type="hidden" name="hangout_id" value="{{ hangout.id }}">
-        <button type="submit">Add Memory</button>
-    </form>
-    <a href="{{url_for('home')}}">Return</a>
+    <div class="memory_form-container">
+        <form action="{{ url_for('process_add_memory') }}" method="post" enctype="multipart/form-data">
+            <div class="image_upload-container">
+                <img id="image-preview" src="" alt="Image Preview" style="display: none; max-width: 100%; height: auto; " >
+                <div class="image_upload-label">
+                    <label class="image_upload-button" for="image">Upload Image</label>
+                    <input type="file" id="image" name="image" accept="image/png, image/jpeg" style="display: none;" placeholder="Upload Image" onchange="previewImage(event)" required>
+                </div>
+            </div>   
+            <div class="text_input-container">
+                <label for="text">Add a caption!</label>
+                <br>
+                <textarea id="text" name="text" rows="4" required></textarea>
+            </div>
+            <input type="hidden" name="hangout_id" value="{{ hangout.id }}">
+            <button class="submit_form-button" type="submit">Add Memory</button>
+        </form>
+    </div>
+    <a class="back-button" href="{{url_for('hangout', hangout_id=hangout.id)}}">Return</a>
 </div>
 
 <script>
