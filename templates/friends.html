@@ -6,18 +6,17 @@
 
 {% block head %}
 <title>Friends</title>
-<h1>Friends</h1>
 {% endblock %}
 
 {% block body %}
 <div class="page-container">
+    <h1>Friends</h1>
     <div class="friends_request-container">
         <h5>Friend Requests</h5>
-        <p id="friend-request-counter"></p>
+        <p id="friend-request-counter" class="friend-request-counter"></p>
         <div class="friend_request_display-container" id="friend-requests"></div>
         <div class="friend_request_list-container" id="friend-requests-list" style="display: none;">
             <span id="friend-requests-list-close">&times;</span>
-            <h3>Friend Requests</h3>
             <div class="friend_request_list_display-container" id="friend-requests-list-display"></div>
         </div>
     </div>
@@ -26,23 +25,23 @@
             <h3>Add Friend:</h3>
             <form id="user_search-form">
                 <input type="text" id="user_search-input" name="user_search" placeholder="Enter name or username">
-                <button type="submit" id="user_search-submit">Search Users</button>
+                <button type="submit" id="user_search-submit" class="search-button">Search Users</button>
             </form>
-            
+
             <div class="user_search_results-container" id="search-result" hidden="true">
-                
+
             </div>
         </div>
         <div class="friends_list-container">
             <h3>Friends:</h3>
             <div class="friends_list_display-container" id="friends-list">
+            </div>
         </div>
     </div>
+    <a href="{{url_for('home')}}" class="back-button">Return</a>
+    
+    {% block script %}
+    <script src="{{ url_for('static', filename = 'js/friends.js')}}"></script>
+    {% endblock %}
 </div>
-<a href="{{url_for('home')}}">Return</a>
-
-{% block script %}
-<script src = "{{ url_for('static', filename = 'js/friends.js')}}"></script>
-{% endblock %}
-
 {% endblock %}

@@ -8,8 +8,9 @@
 <div class="page-container">
     <div class="nav-container">
         <div class="user-container">
-            <h1>{% if current_user.firstname %}
+            <h1>{% if current_user.firstname and current_user.lastname %}
                 {{ current_user.firstname }}
+                {{ current_user.lastname }}
                 {% else %}
                 {{ current_user.username }}
                 {% endif %}
@@ -23,7 +24,22 @@
                 {% endif %}
             </div>
         </div>
+        {% if user_profile == True %}
+        <div class="profile-update-container">
+            <h3>Update Profile</h3>
+            <form action="{{ url_for('process_update_profile') }}" method="post" enctype="multipart/form-data">
+                <label for="profile_picture">Profile Picture:</label>
+                <input type="file" name="profile_picture" id="profile_picture">
+                <label for="firstname">First Name:</label>
+                <input type="text" name="firstname" id="firstname" value="{{ current_user.firstname }}">
+                <label for="lastname">Last Name:</label>
+                <input type="text" name="lastname" id="lastname" value="{{ current_user.lastname }}">
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+        {% endif %}
     </div>
+</div>
 </div>
 {% endblock %}
 

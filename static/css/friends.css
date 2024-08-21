@@ -15,87 +15,303 @@ body {
     padding: 0;
 }
 
-.user_search_results-container {
+.page-container {
     display: flex;
-    flex-direction: row;
-    margin: 10px;
-
-    height: 200px
-    
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    background-color: var(--background-color);
+}
+h1 {
+    font-size: 250%;
+    margin-bottom: 30px;
+    color: var(--accent-color-dark)
+}
+.friends_request-container {
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 95%;
+    box-sizing: border-box;
 }
 
-.user-card {
+.friends_request-container h5 {
+    font-size: 130%;
+    margin-top: 15px;
+}
+
+.friend_request_list-container {
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 20px;
+}
+
+.friend_request_list-container span {
+    cursor: pointer;
+    color: var(--accent-color);
+}
+
+.friend_request_list_display-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.friend-request-card {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
     align-items: center;
     padding: 10px;
     margin: 10px;
-    background-color: var(--secondary-color);
-    box-shadow: 0 0px 10px rgba(0,0,0,0.2);
-    width: 300px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    max-width: 300px;
     height: 100px;
+    background-color: white;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.user-card img {
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
+.friend-request-card img {
+    width: 50px;
+    height: 50px;
     object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
     margin-left: 10px;
-    margin-right: 10px
 }
 
-.user_info-container {
+.friend-request-card h3 {
+    margin: 0;
+    margin-right: 20px;
+    font-size: 100%;
+    color: var(--text-color-dark);
+}
+
+.friend-request-card p {
+    margin: 0;
+    margin-right: 20px;
+    font-size: 90%;
+    color: var(--text-color);
+}
+
+.friend-request-card button {
+    margin-right: 10px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 5px 5px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.friend-request-card button:hover {
+    background-color: var(--accent-color-dark);
+}
+
+.friend-request-counter {
+    color: var(--accent-color);
+}
+
+.friend-request-counter:hover {
+    cursor: pointer;
+}
+
+.friends-container {
     display: flex;
     flex-direction: column;
-    margin-right: 10px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 95%;
+
+    box-sizing: border-box;
+    margin-top: 20px;
+    margin-bottom: 50px;
 }
 
-.user_info-container h3 {
-    color: white;
-    margin: 2px
+.add_friend-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.user_info-container p {
-    color: white;
-    margin: 2px
+.add_friend-container input {
+    padding: 15px;
+    border: 1px solid #00000020;
+    font-size: 100%;
+    color: var(--text-color);
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+.user_search_results-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-height: 300px;
+    margin-top: 10px;
+    background-color: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.friends_list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.friends_list_display-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
 .friend-card {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
     align-items: center;
     padding: 10px;
     margin: 10px;
-    background-color: var(--secondary-color);
-    box-shadow: 0 0px 10px rgba(0,0,0,0.2);
-    width: 300px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    max-width: 300px;
     height: 100px;
+    background-color: white;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .friend-card img {
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
+    width: 50px;
+    height: 50px;
     object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
     margin-left: 10px;
-    margin-right: 10px
 }
 
-.friend_info-container {
+.friend-card .friend_info-container {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 1;
+}
+
+.friend-card .friend_info-container h3 {
+    margin: 0;
+    font-size: 100%;
+    color: var(--text-color-dark);
+}
+
+.friend-card .friend_info-container p {
+    margin: 0;
+    font-size: 90%;
+    color: var(--text-color);
+}
+
+.friend-card button {
     margin-right: 10px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 5px 5px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.friend_info-container h3 {
-    color: white;
-    margin: 2px
+.friend-card button:hover {
+    background-color: var(--accent-color-dark);
 }
 
-.friend_info-container p {
+.user-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    height: 100px;
+    background-color: white;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.user-card img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.user-card .user_info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 1;
+}
+
+.user-card .user_info-container h3 {
+    margin: 0;
+    font-size: 100%;
+    color: var(--text-color-dark);
+}
+
+.user-card .user_info-container p {
+    margin: 0;
+    font-size: 90%;
+    color: var(--text-color);
+}
+
+.user-card button {
+    margin-right: 10px;
+    background-color: var(--accent-color);
     color: white;
-    margin: 2px
+    padding: 10px 12px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-card button:hover {
+    background-color: var(--accent-color-dark);
+}
+
+.search-button {
+    margin-top: 10px;
+    margin-right: 10px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 10px 12px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.back-button {
+    padding: 10px;
+    background-color: white;
+    text-decoration: none;
+    color: var(--accent-color);
+    font-weight: bold;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    height: 25px;
+    width: 150px;
+    align-content: center;
+    text-align: center;
+    align-self: flex-start;
+    margin-left: 20px;
 }

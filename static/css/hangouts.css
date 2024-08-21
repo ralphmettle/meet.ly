@@ -29,8 +29,15 @@ h1 {
 }
 
 .new_hangout-container {
-    background-color: var(--secondary-color);
+    background-color: var(--accent-color);
     padding: 20px;
+    width: 200px;
+    text-align: center;
+}
+
+.new_hangout-container:hover {
+    background-color: var(--accent-color-dark);
+    cursor: pointer;
 }
 
 .new_hangout-container a {
@@ -59,7 +66,7 @@ h1 {
     flex-direction: column;
     align-self: center;
     margin-left: 10px;
-    margin-top: 50px;
+    margin-top: 10px;
 }
 
 .hangout_feed-header h3 {
@@ -90,9 +97,9 @@ h1 {
     text-align: justify;
 }
 
-.hangout-box h2, 
-.hangout-box h3, 
-.hangout-box p, 
+.hangout-box h2,
+.hangout-box h3,
+.hangout-box p,
 .hangout-box a {
     margin: 0 5px 0;
     padding: 5px;
@@ -108,7 +115,7 @@ h1 {
 
 
 .hangout-box a {
-    color: var(--secondary-color);
+    color: var(--accent-color);
     text-decoration: none;
     font-size: 80%;
 }
@@ -119,7 +126,7 @@ h1 {
 
 
 .attendees {
-    margin-top: 10px;
+    margin-top: 0px;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -147,29 +154,14 @@ h1 {
 }
 
 .attendee h3 {
-    margin: 0 0px 0 0;
+    margin: 0;
+    color: var(--text-color-dark);
 }
 
 .attendee p {
     margin: 0;
-    font-size: 100%;
-}
-
-:root {
-    --accent-color: #86786f;
-    --accent-color-dark: #534e4a;
-    --accent-color-darker: #161a46;
-    --secondary-color: #ff708f;
-    --secondary-color-light: #ff85aa;
-    --background-color: #f2ebe6;
-    --text-color: #616161;
-    --text-color-dark: #0e0e0e;
-}
-
-body {
-    font-family: Helvetica, Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    font-size: 90%;
+    color: var(--text-color);
 }
 
 .page-container {
@@ -179,12 +171,19 @@ body {
     justify-content: flex-start;
     height: 100%;
     background-color: var(--background-color);
-    padding: 20px; /* Add padding around the content */
+    padding: 20px;
 }
 
 h1 {
     font-size: 250%;
     margin-bottom: 30px;
+    color: var(--accent-color-dark)
+}
+
+.hangout_feed-header h3 {
+    font-size: 200%;
+    margin-bottom: 20px;
+    color: var(--accent-color-dark);
 }
 
 .memories-container {
@@ -214,7 +213,7 @@ h1 {
     display: flex;
     flex-direction: column;
     background-color: #fff;
-    border: 1px solid var(--accent-color-light);
+    border: 1px solid var(--accent-color);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     padding: 10px;
     margin: 10px 0;
@@ -283,7 +282,7 @@ form label {
     display: flex;
     justify-content: center;
     color: white;
-    background-color: var(--secondary-color);
+    background-color: var(--accent-color);
     width: 100%;
     height: 100%;
     text-align: center;
@@ -316,7 +315,7 @@ form input[type="file"] {
 
 .submit_form-button {
     padding: 10px;
-    background-color: var(--secondary-color);
+    background-color: var(--accent-color);
     color: white;
     border: none;
     cursor: pointer;
@@ -327,14 +326,14 @@ form input[type="file"] {
 }
 
 form button:hover {
-    background-color: var(--secondary-color-light);
+    background-color: var(--accent-color-dark);
 }
 
 .back-button {
     padding: 10px;
     background-color: white;
     text-decoration: none;
-    color: var(--secondary-color);
+    color: var(--accent-color);
     font-weight: bold;
     margin-top: 100px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);

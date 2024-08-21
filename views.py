@@ -132,22 +132,27 @@ def config_views(app, db, bcrypt):
         
     @app.route('/user/<username>')
     def user(username):
-        current_user = User.query.filter_by(username=username).first()
+        user_profile = User.query.filter_by(username=username).first()
 
         user_data = {
-            'username': current_user.username,
-            'firstname': current_user.firstname,
-            'lastname': current_user.lastname,
-            'profile_picture': current_user.profile_picture,
+            'username': user_profile.username,
+            'firstname': user_profile.firstname,
+            'lastname': user_profile.lastname,
+            'profile_picture': user_profile.profile_picture,
         }
 
-        if current_user is None:
+        if user_profile is None:
             return '404 Not Found', 404
         
-        if current_user.is_authenticated and current_user.username == username:
-            return render_template('profile.html', current_user=user_data, user_profile = True)
+        if current_user.username == username:
+            user_profile = True
         else:
-            return render_template('profile.html', current_user=user_data, user_profile = False)
+            user_profile = False
+
+        if current_user.is_authenticated and current_user.username == username:
+            return render_template('profile.html', current_user=user_data, user_profile = user_profile)
+        else:
+            return render_template('profile.html', current_user=user_data, user_profile = user_profile)
     
     @app.route('/friends')
     @login_required
@@ -335,6 +340,24 @@ def config_views(app, db, bcrypt):
                 return None
             else:
                 return sent_requests
+            
+    @app.route('/process_update_profile', methods=['POST'])
+    @login_required
+    def process_update_profile():
+        user = current_user
+        profile_picture = request.files.get('profile_picture')
+        firstname = request.form.get('firstname')
+        lastname = request.form.get('lastname')
+        
+        if profile_picture:
+            process_profile_picture(profile_picture, user)
+        if firstname:
+            user.firstname = firstname
+        if lastname:
+            user.lastname = lastname
+
+        db.session.commit()
+        return redirect(url_for('user', username=user.username))        
     
     @app.route('/process-search-user', methods=['POST'])
     @login_required

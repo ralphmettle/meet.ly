@@ -33,6 +33,11 @@ body {
     box-sizing: border-box;
 }
 
+h1 {
+    font-size: 250%;
+    color: var(--accent-color-dark)
+}
+
 .hangout_title-container,
 .invitee-container,
 .location-container {
@@ -60,8 +65,8 @@ body {
 
 .location-container h3,
 .location-container i {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 .invitee_search-container,
@@ -70,24 +75,28 @@ body {
     margin-top: 20px;
 }
 
+#text {
+    color: var(--text-color);
+}
+
 .invitee_search-container {
-  display: flex;
+    display: flex;
 }
 
 .invitee-container,
 .invited_list {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 #invitee-input {
-  display: flex;
-  width: 20%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: white;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  align-self: center;
+    display: flex;
+    width: 15%;
+    padding: 15px;
+    border: 1px solid #00000020;
+    font-size: 100%;
+    color: var(--text-color);
+    align-self: center;
 }
 
 .invitee-card,
@@ -98,9 +107,12 @@ body {
     padding: 10px;
     margin: 10px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-    max-width: 250px;
-    height: 75px;
+    max-width: 300px;
+    height: 100px;
     background-color: white;
+    width: 100%;
+    box-sizing: border-box;
+    flex-grow: 1;
 }
 
 .invitee-card img,
@@ -115,29 +127,44 @@ body {
 
 .invitee-card h3,
 .invited-card h3 {
-  margin-right: 20px;
+    margin: 0;
+    margin-right: 30px;
+    color: var(--text-color-dark);
 }
 
+.invitee-card p,
+.invited-card p {
+    margin: 0;
+    color: var(--text-color);
+}
 
 .invitee-card button {
-  margin-right: 10px;
-  background-color: var(--secondary-color);
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-right: 10px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 
 .invited-card button {
-  margin-right: 10px;
-  background-color: var(--secondary-color);
-  color: white;
-  padding: 10px 12px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-right: 10px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 10px 12px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.invitee-card button:hover {
+    background-color: var(--accent-color-dark);
+}
+
+.invited-card button:hover {
+    background-color: var(--accent-color-dark);
 }
 
 .location_input-container {
@@ -156,20 +183,22 @@ body {
 .prompt-container p {
     margin: 0 0 10px;
     text-align: center;
+    color: var(--text-color);
 }
 
 #prompt {
     width: 75%;
-    padding: 10px;
+    padding: 15px;
+    border: 1px solid #00000020;
+    font-size: 100%;
+    color: var(--text-color);
     margin-bottom: 20px;
-    border: white;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 #prompt-submit {
-    background-color: var(--secondary-color);
+    background-color: var(--accent-color);
     color: white;
-    padding: 10px 20px;
+    padding: 20px 40px;
     border: none;
     cursor: pointer;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -177,7 +206,7 @@ body {
 }
 
 #prompt-submit:hover {
-    background-color: var(--secondary-color-light);
+    background-color: var(--accent-color-dark);
 }
 
 #prev-images,
@@ -209,6 +238,25 @@ body {
     width: 100%;
 }
 
+.place-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.place-item img {
+    align-self: center;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.place-item p {
+    margin-bottom: 15px;
+}
+
+.place-item:hover {
+    cursor: pointer;
+}
+
 #place_image {
     width: 100%;
     max-width: 100%;
@@ -217,7 +265,7 @@ body {
 }
 
 #confirm_hangout-button {
-    background-color: var(--secondary-color);
+    background-color: var(--accent-color);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -227,16 +275,16 @@ body {
 }
 
 #place_name {
-  color: var(--secondary-color);
-  font-size: 200%;
+    color: var(--accent-color);
+    font-size: 200%;
 }
 
 #confirm_hangout-button:hover {
-    background-color: var(--secondary-color-light);
+    background-color: var(--accent-color-dark);
 }
 
 #place_maps_link {
-    color: var(--secondary-color);
+    color: var(--accent-color);
     text-decoration: none;
     font-size: 85%;
     margin-top: 10px;

@@ -5,33 +5,27 @@
 {% endblock %}
 
 {% block head %}
-    {% if current_user.is_authenticated %}
-        <div class = 'home-container'>
-            <div class = 'nav-container'>
-                <div class = 'user-container'>
-                    <h1>Hello, 
-                        {% if current_user.firstname %}
-                            {{ current_user.firstname }}
-                        {% else %}
-                            {{ current_user.username }}
-                        {% endif %}
-                    </h1>
-                <div class = 'sidebar-container'>
-                    <a href="{{url_for('home')}}">Home</a>
-                    <a href="{{url_for('hangouts')}}">Hangouts</a>
-                    <a href="{{url_for('user', username=current_user.username)}}">Profile</a>
-                    <a href="{{url_for('logout')}}">Logout</a>
-                    <a href="{{url_for('friends')}}">Friends</a>
-                </div>
-            </div>
-            <div class = 'memories-container'>
-                <h3>My Memories</h3>
-                </div>
-            </div>
-        </div>
-    {% else %}
-    {% endif %}
+
 {% endblock %}
 
 {% block body %}
+<div class = 'home-container'>
+    <div class = 'nav-container'>
+        <div class = 'user-container'>
+            <h1>Hello, 
+                {% if current_user.firstname %}
+                    {{ current_user.firstname }}
+                {% else %}
+                    {{ current_user.username }}
+                {% endif %}
+            </h1>
+        <div class = 'sidebar-container'>
+            <a href="{{url_for('home')}}">Home</a>
+            <a href="{{url_for('hangouts')}}">Hangouts</a>
+            <a href="{{url_for('user', username=current_user.username)}}">Profile</a>
+            <a href="{{url_for('logout')}}">Logout</a>
+            <a href="{{url_for('friends')}}">Friends</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

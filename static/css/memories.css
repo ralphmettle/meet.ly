@@ -22,7 +22,7 @@ body {
     justify-content: flex-start;
     height: 100%;
     background-color: var(--background-color);
-    padding: 20px; /* Add padding around the content */
+    padding: 20px;
 }
 
 h1 {
@@ -57,7 +57,7 @@ h1 {
     display: flex;
     flex-direction: column;
     background-color: #fff;
-    border: 1px solid var(--accent-color-light);
+    border: 1px solid var(--accent-color);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     padding: 10px;
     margin: 10px 0;
@@ -126,7 +126,7 @@ form label {
     display: flex;
     justify-content: center;
     color: white;
-    background-color: var(--secondary-color);
+    background-color: var(--accent-colorcolor);
     width: 100%;
     height: 100%;
     text-align: center;
@@ -159,7 +159,7 @@ form input[type="file"] {
 
 .submit_form-button {
     padding: 10px;
-    background-color: var(--secondary-color);
+    background-color: var(--accent-color);
     color: white;
     border: none;
     cursor: pointer;
@@ -170,14 +170,14 @@ form input[type="file"] {
 }
 
 form button:hover {
-    background-color: var(--secondary-color-light);
+    background-color: var(--accent-color-dark);
 }
 
 .back-button {
     padding: 10px;
     background-color: white;
     text-decoration: none;
-    color: var(--secondary-color);
+    color: var(--accent-color);
     font-weight: bold;
     margin-top: 100px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
