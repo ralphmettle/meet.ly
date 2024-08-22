@@ -1,6 +1,6 @@
 from app import db
 from flask_login import UserMixin
-from sqlalchemy.orm import relationship
+from enum import Enum
 
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
@@ -81,6 +81,11 @@ class Hangout(db.Model):
     def __repr__(self):
         return f'id: {self.id};'
     
+class AttendeeStatus(Enum):
+    PENDING = 'PENDING'
+    ACCEPTED = 'ACCEPTED'
+    REJECTED = 'REJECTED'
+
 class HangoutAttendee(db.Model):
     __tablename__ = 'hangout_attendee'
 
@@ -88,7 +93,7 @@ class HangoutAttendee(db.Model):
 
     hangout_id = db.Column(db.Integer, db.ForeignKey('hangout.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    status = db.Column(db.Enum('pending', 'accepted', 'rejected'), default='pending', nullable=False)
+    status = db.Column(db.Enum(AttendeeStatus), default=AttendeeStatus.PENDING, nullable=False)
 
     hangout = db.relationship('Hangout', back_populates='attendees', lazy=True)
     user = db.relationship('User', backref='hangouts', lazy=True)

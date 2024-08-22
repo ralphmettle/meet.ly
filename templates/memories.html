@@ -4,11 +4,15 @@
 {% endblock %}
 
 {% block head %}
+<title>Memories</title>
 {% endblock %}
 
 {% block body %}
 <div class="page-container">
-    <h1>{{ hangout.name }}</h1>
+    <header>
+        <a href="{{ url_for('home') }}"><h1>meet.ly</h1></a>
+    </header>
+    <h1 class="page-title">{{ hangout.name }}</h1>
     <div class="memories-container">
         <h3>Memories</h3>
         <div class="memory-feed" id="memory-feed">

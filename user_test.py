@@ -334,8 +334,17 @@ def get_friends(num):
         print('User sent requests:')
         print(get_user_sent_requests(num))
 
-if __name__ == '__main__':
-    app = create_app()
-    with app.app_context():
-        user = db.session.get(User, 3)
-        print(user.location)
+# Initialise the database for testing purposes.
+def init_db():
+    add_test()
+    add_dummy()
+    add_friendships()
+    add_test_friends()
+
+def delete_db():
+    delete_test()
+    delete_dummy()
+    delete_friendships()
+
+# Run the following to initialise the database for testing purposes.
+# init_db()
