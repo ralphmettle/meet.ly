@@ -5,13 +5,16 @@
 {% endblock %}
 
 {% block head %}
-<title>Create Hangout</title>
+<title>Create a Hangout</title>
 <script src="https://kit.fontawesome.com/c5e9f26cf9.js" crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block body %}
 <div class="page-container">
-    <h1>Create a new Hangout</h1>
+    <header>
+        <a href="{{ url_for('home') }}"><h1>meet.ly</h1></a>
+    </header>
+    <h1 class="page-title">Create a new Hangout</h1>
     <div class="form-container">
         <div class="hangout_title-container">
             <div class="pen-icon">
@@ -22,10 +25,12 @@
             </div>
         </div>
         <div class="invitee-container">
-            <div class="user-icon">
-                <i class="fa-solid fa-user"></i>
+            <div class = "invitee-header">
+                <div class="user-icon">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h3>Search Friends:</h3>
             </div>
-            <h3>Invitees:</h3>
             <form type="text" id="invitee-input-form" placeholder="Enter username">
                 <input type="text" id="invitee-input" placeholder="Enter username">
             </form>
@@ -36,20 +41,22 @@
             </div>
         </div>
         <div class="location-container">
-            <h3>Where would you like to go?</h3>
-            <div class="location-icon">
+            <div class="compass-icon">
                 <i class="fa-solid fa-compass"></i>
             </div>
+            <h3>Where would you like to go?</h3>
             <div class="location_input-container">
                 <div class="prompt-container">
-                    <p>Provide a prompt to search for a venue!</p> <!-- Align this below the header -->
+                    <p class="search-caption">Provide a prompt to search for a venue!</p>
                     <input type="text" id="prompt" placeholder="Prompt">
                     <button id="prompt-submit">
                         Submit Prompt
                     </button>
                     <div class="place_image-container" id="place_image-container"></div>
-                    <button id="prev-images" style="display: none;">Previous</button>
-                    <button id="next-images" style="display: none;">Next</button>
+                    <div class="cycle-buttons">
+                        <button id="prev-images" style="display: none;">Previous</button>
+                        <button id="next-images" style="display: none;">Next</button>
+                    </div>
                 </div>
                 <!-- <div class="manual_input_container">
                     <p>Or enter a venue name manually:</p> 
@@ -74,6 +81,7 @@
             </div>
         </div>
     </div>
+    <a href="{{ url_for('hangouts')}}" class="back-button">Back to Hangouts</a>
 </div>
 
 {% block script %}

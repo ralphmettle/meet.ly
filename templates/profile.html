@@ -5,7 +5,14 @@
 {% endblock %}
 
 {% block head %}
+<title>{{ current_user.username }}'s Profile</title>
+{% endblock %}
+
+{% block body %}
 <div class="page-container">
+    <header>
+        <a href="{{ url_for('home') }}"><h1>meet.ly</h1></a>
+    </header>   
     <div class="nav-container">
         <div class="user-container">
             <h1>{% if current_user.firstname and current_user.lastname %}
@@ -40,18 +47,4 @@
         {% endif %}
     </div>
 </div>
-</div>
 {% endblock %}
-
-{% block body %}
-{% endblock %}
-<!-- 
-- Display username
-- Display profile picture
-- Display current location if public
-- Display public memories
-- Link to settings
-- Link to memories
-- Link to home
-- Link to logout
--->

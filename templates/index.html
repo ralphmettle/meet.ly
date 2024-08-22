@@ -1,32 +1,28 @@
 {% extends 'base.html' %}
 
-{% block head %}
-<title>Home Page</title>
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 {% endblock %}
 
-{% block body%}
-<h1>Home</h1>
+{% block head %}
+<title>meet.ly</title>
+{% endblock %}
 
-    {% if current_user.is_authenticated %}
-        {% if current_user.role == 'dev_test' or current_user.role == 'test' %}
-            <h2>Hello, {{current_user.username}}.</h2>
-            <p>User data:<br></br>{{current_user}}</p>
-            {% if user_location %}
-                <p>Location data:<br></br>{{user_location}}</p>
-            {% else %}
-                <p>No location set.</p>
-            {% endif %}
-        {% else %}
-            <h2>Hello, {{current_user.username}}.</h2>
-        {% endif %}
-    {% else %}
-        <h2>Welcome to the home page!</h2>
-        <h3>No user logged in.</h3>
-    {% endif %}
-
-    <a href="{{url_for('home')}}">Home</a>
-    <a href="{{url_for('login')}}">Login</a>
-    <a href="{{url_for('register')}}">Register</a>
-    <a href="{{url_for('logout')}}">Logout</a>
-
+{% block body %}
+<div class="page-container">
+    <header>
+        <h1>meet.ly</h1>
+    </header>
+    <main>
+        <h2>Welcome to meet.ly</h2>
+        <p>Connect with friends, plan hangouts, and create memories together.</p>
+        <div class="button-container">
+            <a href="{{ url_for('login') }}" class="btn btn-primary">Log In</a>
+            <a href="{{ url_for('register') }}" class="btn btn-secondary">Sign Up</a>
+        </div>
+    </main>
+    <footer>
+        <p>2024 | meet.ly c/o Ralph Mettle</p>
+    </footer>
+</div>
 {% endblock %}

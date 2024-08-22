@@ -1,4 +1,4 @@
-var debug = true;
+var debug = false;
 let placeImages = [];
 let currentIndex = 0;
 let coordinateCentroid = {};
@@ -131,7 +131,11 @@ async function displayUsers(user_list) {
 
             if (!invitee_list.includes(username)) {
                 invitee_list.push(username);
-                alert(`${username} has been added to the invite list.`);
+
+                if (debug) {
+                    alert(`${username} has been added to the invite list.`);
+                }
+
                 displayInvited();
                 console.log(invitee_list);
 
@@ -314,16 +318,19 @@ async function loadPlaceAsHangout(placeId, placeName) {
                     const placeAddress = place.formatted_address;
                     console.log(`Photo for ${placeName}: ${photoUrl}`);
 
-                    // Get the photo and the image name and save them to a list object
+                    // Get the photo and the image name and use them for display
                     const imgElement = document.createElement('img');
                     imgElement.src = photoUrl;
                     imgElement.alt = placeName;
+                    imgElement.className = 'place-image';
                     
                     const labelElement = document.createElement('p');
                     labelElement.textContent = placeName;
+                    labelElement.className = 'place-name';
 
                     const addressElement = document.createElement('p');
                     addressElement.textContent = placeAddress;
+                    addressElement.className = 'place-address';
                     
                     // Get the place details for each place and add then to the dataset for each div element in the container
                     const containerDiv = document.createElement('div');
@@ -339,7 +346,7 @@ async function loadPlaceAsHangout(placeId, placeName) {
                     containerDiv.appendChild(labelElement);
                     containerDiv.appendChild(addressElement);
                     
-                    // Display the clicked place on the page to be selected for the hangout
+                    // Display the clicked place on the page to be selected for the hangout and store data for the backend
                     containerDiv.addEventListener('click', async function() {
                         const placeName = containerDiv.dataset.placeName;
                         const placeId = containerDiv.dataset.placeId;
@@ -450,7 +457,10 @@ async function addHangout() {
             console.log(response);
         }
 
-        alert('Hangout added successfully!');
+        if (debug) {
+            alert('Hangout added successfully!');
+        }
+
         window.location.href = '/hangouts';
     }
 }

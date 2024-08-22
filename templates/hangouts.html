@@ -5,12 +5,15 @@
 {% endblock %}
 
 {% block head %}
-
+<title>My Hangouts</title>
 {% endblock %}
 
 {% block body %}
 <div class="page-container">
-    <h1> Hangouts </h1>
+    <header>
+        <a href="{{ url_for('home') }}"><h1>meet.ly</h1></a>
+    </header>
+    <h1 class="page-title"> Hangouts </h1>
     <div class="new_hangout-container">
         <a href="{{url_for('new_hangout')}}">New Hangout</a>
     </div>

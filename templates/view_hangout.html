@@ -5,12 +5,15 @@
 {% endblock %}
 
 {% block head %}
-
+<title>{{ hangout.name }}</title>
 {% endblock %}
 
 {% block body %}
 <div class="page-container">
-    <h1>{{ hangout.name }}</h1>
+    <header>
+        <a href="{{ url_for('home') }}"><h1>meet.ly</h1></a>
+    </header>   
+    <h1 class="page-title">{{ hangout.name }}</h1>
     <div class="hangout-container">
         <img src="{{ hangout.place_photo_url }}" alt="{{ hangout.place_name }}">
         <div class="hangout_info=container">
