@@ -1,0 +1,97 @@
+:root {
+    --accent-color: #86786f;
+    --accent-color-dark: #534e4a;
+    --accent-color-darker: #161a46;
+    --secondary-color: #ff708f;
+    --secondary-color-light: #ff85aa;
+    --background-color: #f2ebe6;
+    --text-color: #616161;
+    --text-color-dark: #0e0e0e;
+}
+
+body {
+    font-family: Helvetica, Arial, sans-serif; 
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+header {
+    text-align: center;
+    font-family: "DM Serif Display", serif;
+    color: var(--accent-color);
+    font-size: 200%;
+    margin-top: 10px;
+    font-weight: 400;
+}
+
+
+h1 {
+    color: var(--accent-color);
+    margin: 0;
+}
+
+main {
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+h2 {
+    font-size: 200%;
+    color: var(--accent-color-dark);
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 110%;
+    margin-bottom: 30px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color-dark);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-color-light);
+}
+
+footer {
+    font-size: 80%;
+    color: var(--text-color);
+}

@@ -83,7 +83,7 @@ body {
     flex: 1;
     justify-content: center;
     align-items: flex-end;
-    color: var(--text-color-dark);
+    color: var(--accent-color-dark);
     font-size: 200%;
     font-weight: extra-bold;
     margin-top: 50px;

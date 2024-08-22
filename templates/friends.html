@@ -5,12 +5,15 @@
 {% endblock %}
 
 {% block head %}
-<title>Friends</title>
+<title>My Friends</title>
 {% endblock %}
 
 {% block body %}
 <div class="page-container">
-    <h1>Friends</h1>
+    <header>
+        <a href="{{ url_for('home') }}"><h1>meet.ly</h1></a>
+    </header>   
+    <h1 class="page-title">Friends</h1>
     <div class="friends_request-container">
         <h5>Friend Requests</h5>
         <p id="friend-request-counter" class="friend-request-counter"></p>
