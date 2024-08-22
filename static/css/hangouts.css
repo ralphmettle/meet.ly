@@ -98,6 +98,9 @@ header h1 {
 
 .hangout_feed-header h3 {
     font-size: 200%;
+    margin-bottom: 20px;
+    color: var(--accent-color-dark);
+    text-align: center;
 }
 
 .hangout-box {
@@ -201,152 +204,38 @@ header h1 {
     padding: 20px;
 }
 
-.hangout_feed-header h3 {
+.pending_hangout_feed{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%
+}
+
+.pending_hangout-header h3 {
     font-size: 200%;
     margin-bottom: 20px;
     color: var(--accent-color-dark);
-}
-
-.memories-container {
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    margin-bottom: 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.memories-container h3 {
-    font-size: 200%;
-    margin-bottom: 20px;
-    align-self: center;
-}
-
-.memory-feed {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.memory-card {
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border: 1px solid var(--accent-color);
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    margin: 10px 0;
-    width: 100%;
-    max-width: 600px;
-    box-sizing: border-box;
-}
-
-.memory-card img {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 10px;
-}
-
-.memory-card p {
-    margin: 0;
-    padding: 10px 0;
-    font-size: 1em;
-    color: var(--text-color);
-    align-self: center;
-    text-wrap: balance;
-}
-
-.memory_form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    max-width: 600px;
-    box-sizing: border-box;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    max-width: 600px;
-    box-sizing: border-box;
-}
-
-form div {
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-form label {
-    font-weight: bold;
-    display: block;
     text-align: center;
 }
 
-.image_upload-container {
+.invitation-response {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.image_upload-container img {
-    margin-bottom: 10px;
-}
-
-.image_upload-button {
-    display: flex;
-    justify-content: center;
-    color: white;
-    background-color: var(--accent-color);
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-}
-
-.image_upload-button:hover {
-    cursor: pointer;
-}
-
-.image_upload-label {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-form textarea {
-    height: 100%;
-    width: 100%;
-    padding: 10px;
-    border: none;
-    box-sizing: border-box;
-    resize: none;
-}
-
-form input[type="file"] {
+    justify-content: space-between;
     margin-top: 10px;
 }
 
-.submit_form-button {
-    padding: 10px;
+.invitation-response button {
+    width: 100px;
+    padding: 15px 20px;
     background-color: var(--accent-color);
     color: white;
     border: none;
     cursor: pointer;
     font-weight: bold;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    align-self: center;
-    margin-top: 50px;
+    margin-right: 20px;
 }
 
-form button:hover {
+.invitation-response button:hover {
     background-color: var(--accent-color-dark);
 }
 

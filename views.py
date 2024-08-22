@@ -809,7 +809,8 @@ def config_views(app, db, bcrypt):
                 'place_photo_url': hangout.hangout.place_photo_url,
                 'place_maps_link': hangout.hangout.place_maps_link,
                 'latitude': hangout.hangout.latitude,
-                'longitude': hangout.hangout.longitude
+                'longitude': hangout.hangout.longitude,
+                'status': hangout.status.name   
             }
             for hangout in hangouts
         ]
@@ -845,8 +846,29 @@ def config_views(app, db, bcrypt):
             return jsonify(attendees_list), 200
         else:
             return jsonify({'message': 'No attendees found.'}), 400
-        
-    #TESTING
+    
+    @app.route('/process-respond-hangout', methods=['POST'])
+    @login_required
+    def process_respond_hangout():
+        data = request.get_json()
+        hangout_id = data.get('hangout_id')
+        response = data.get('response')
+
+        hangout_attendee = HangoutAttendee.query.filter_by(hangout_id=hangout_id, user_id=current_user.id).first()
+
+        if hangout_attendee:
+            if response == 'accept':
+                hangout_attendee.status = AttendeeStatus.ACCEPTED
+            elif response == 'reject':
+                hangout_attendee.status = AttendeeStatus.REJECTED
+            else:
+                return jsonify({'message': 'Invalid response.'}), 400
+
+            db.session.commit()
+            return jsonify({'message': f'Invitation {response}ed successfully.'}), 200
+        else:
+            return jsonify({'message': 'No invitation found.'}), 400
+
     @app.route('/process-get-central-coordinates', methods=['POST'])
     @login_required
     def process_get_central_coordinates():
