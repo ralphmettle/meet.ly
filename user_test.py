@@ -335,11 +335,7 @@ def get_friends(num):
         print(get_user_sent_requests(num))
 
 # Initialise the database for testing purposes.
-def init_db():
-    add_test()
-    add_dummy()
-    add_friendships()
-    add_test_friends()
+
 
 def delete_db():
     delete_test()
@@ -347,4 +343,4 @@ def delete_db():
     delete_friendships()
 
 # Run the following to initialise the database for testing purposes.
-# init_db()
+add_test_user()

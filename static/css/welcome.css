@@ -82,7 +82,7 @@ body {
     padding: 50px;
     /*box-shadow: 0 0 20px rgba(0, 0, 0, .0);*/
     width: 500px;
-    height: 750px;
+    height: 800px;
     box-sizing: border-box;
     flex-direction: column;
     justify-content: center;
@@ -178,19 +178,29 @@ body {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    margin-bottom: 30px;
+    width: 100%;
 }
 
 .manual_location-container p {
     color: var(--accent-color);
     background: none;
     border: none;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-bottom: 30px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     font-size: 75%;
     text-align: center;
 }
 
+.manual_location-container input {
+    display: flex;
+    width: 92%;
+    padding: 15px;
+    border: 1px solid #00000020;
+    font-size: 100%;
+    color: var(--text-color);
+    align-self: center;
+}
 .profile_picture-container {
     display: flex;
     justify-content: center;

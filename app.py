@@ -11,7 +11,7 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__, template_folder='templates')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./test.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://meetlyadmin:Qd1eXdgtfK5iFdvnrkPKinJJFrugScTP@dpg-cr3m8aqj1k6c73dq5oqg-a.oregon-postgres.render.com/meetlydb'
     app.secret_key = 'KEY'
 
     from views import config_views
