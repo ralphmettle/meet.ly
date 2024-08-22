@@ -334,8 +334,4 @@ def get_friends(num):
         print('User sent requests:')
         print(get_user_sent_requests(num))
 
-if __name__ == '__main__':
-    app = create_app()
-    with app.app_context():
-        user = db.session.get(User, 3)
-        print(user.location)
+add_test_friends()

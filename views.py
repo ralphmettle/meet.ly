@@ -8,7 +8,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from location_clustering import coordinate_builder, location_clustering
 from gpt_api import client, MODEL
 from datetime import datetime
-from models import User, UserLocation, Friendship, Hangout, HangoutAttendee, Memory, MemoryData
+from models import User, UserLocation, Friendship, Hangout, HangoutAttendee, Memory, MemoryData, AttendeeStatus
 from sqlalchemy import or_
 
 places_api_key = "AIzaSyDsqXAw5paGfj1xv-SvrJgOcaowqEo9W6Y"
@@ -195,7 +195,7 @@ def config_views(app, db, bcrypt):
                     'firstname': attendee.user.firstname,
                     'lastname': attendee.user.lastname,
                     'profile_picture': attendee.user.profile_picture,
-                    'status': attendee.status
+                    'status': attendee.status.name
                 }
                 for attendee in hangout.attendees
                 if attendee.user_id != current_user.id
@@ -750,11 +750,12 @@ def config_views(app, db, bcrypt):
             if invitees:
                 invitee_ids = [get_id_from_username(username) for username in invitees]
                 
-                creator_invitee = HangoutAttendee(hangout_id=new_hangout.id, user_id=user_id, status='accepted')
+                creator_invitee = HangoutAttendee(hangout_id=new_hangout.id, user_id=user_id, status=AttendeeStatus.ACCEPTED)
+                print(f'Adding user with status: {creator_invitee.status}')
                 db.session.add(creator_invitee)
 
                 for invitee_id in invitee_ids:
-                    new_invitee = HangoutAttendee(hangout_id=new_hangout.id, user_id=invitee_id)
+                    new_invitee = HangoutAttendee(hangout_id=new_hangout.id, user_id=invitee_id, status=AttendeeStatus.PENDING)
                     db.session.add(new_invitee)
                     
             db.session.commit()
@@ -834,7 +835,7 @@ def config_views(app, db, bcrypt):
                 'firstname': attendee.user.firstname,
                 'lastname': attendee.user.lastname,
                 'profile_picture': attendee.user.profile_picture,
-                'status': attendee.status
+                'status': attendee.status.name
             }
             for attendee in attendees
             if attendee.user_id != current_user.id
@@ -906,3 +907,4 @@ def config_views(app, db, bcrypt):
         db.session.commit()
 
         return jsonify({'message': 'Memory added successfully.'}), 200
+    

@@ -11,8 +11,8 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__, template_folder='templates')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./test.db'
-    app.secret_key = 'KEY'  # Use an actual secret key in production!
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:localpostgres@localhost:5432/meetly-database'
+    app.secret_key = 'KEY'
 
     from views import config_views
     config_views(app, db, Bcrypt(app))
