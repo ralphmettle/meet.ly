@@ -275,8 +275,11 @@ def config_views(app, db, bcrypt):
         return f'{filename}.{extension}'
 
     def process_profile_picture(profile_picture, user):
-        picture_folder = 'static\images\profile_pictures'
+        picture_folder = os.path.join('static', 'images', 'profile_pictures')
         extensions = {'jpg', 'jpeg', 'png'}
+
+        if not os.path.exists(picture_folder):
+            os.makedirs(picture_folder)
 
         if profile_picture and get_extension(profile_picture.filename) in extensions:
             filename = create_filename(user.username, get_extension(profile_picture.filename))
@@ -291,9 +294,12 @@ def config_views(app, db, bcrypt):
             flash('Invalid file type. Please upload a .jpg, .jpeg, or .png file.')
             
     def process_memory_image(image, memory_id, memory_data_id):
-        picture_folder = 'static\images\memories'
+        picture_folder = os.path.join('static', 'images', 'memories')
         allowed_extensions = {'jpg', 'jpeg', 'png'}
         
+        if not os.path.exists(picture_folder):
+            os.makedirs(picture_folder)
+
         if image and get_extension(image.filename) in allowed_extensions:
             filename = create_filename(f'{memory_id}_{memory_data_id}', get_extension(image.filename))
             file_path = os.path.join(picture_folder, filename)
@@ -624,10 +630,6 @@ def config_views(app, db, bcrypt):
     @app.route('/process-hangout-search', methods=['POST'])
     @login_required
     def process_hangout_search():
-        # Get the response from the request JSON object and extract the keywords
-        # Use the extracted keywords to search the Google Places API
-        # Return the Places search result to be displayed on the front-end
-
         data = request.get_json()
         keywords = data.get('keywords')
         location = data.get('coordinateCentroid').get('message')
@@ -928,5 +930,5 @@ def config_views(app, db, bcrypt):
 
         db.session.commit()
 
-        return jsonify({'message': 'Memory added successfully.'}), 200
+        return redirect(url_for('memories', hangout_id=hangout_id)), 200
     

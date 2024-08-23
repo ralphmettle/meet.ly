@@ -55,22 +55,22 @@ header h1 {
     color: var(--accent-color-dark)
 }
 
-.new_hangout-container {
+.new_hangout-button {
+    display: flex;
     background-color: var(--accent-color);
-    padding: 20px;
-    width: 200px;
+    height: 60px;
+    width: 240px;
     text-align: center;
-}
-
-.new_hangout-container:hover {
-    background-color: var(--accent-color-dark);
-    cursor: pointer;
-}
-
-.new_hangout-container a {
+    align-items: center;
+    justify-content: center;
     text-decoration: none;
     font-weight: bold;
     color: white;
+}
+
+.new_hangout-button:hover {
+    background-color: var(--accent-color-dark);
+    cursor: pointer;
 }
 
 .hangout_feed-container {

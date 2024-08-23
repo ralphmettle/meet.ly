@@ -16,6 +16,10 @@ body {
     background-color: var(--background-color);
 }
 
+html {
+    background-color: var(--background-color);
+}
+
 .page-container {
     display: flex;
     flex-direction: column;
