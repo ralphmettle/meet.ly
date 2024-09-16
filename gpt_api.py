@@ -4,8 +4,6 @@ import os
 import json
 
 #client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-client = OpenAI(api_key='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')
-
 
 MODEL = "gpt-4o-mini"
 
