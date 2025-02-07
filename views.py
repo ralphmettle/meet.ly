@@ -14,6 +14,10 @@ from sqlalchemy import or_
 places_api_key = os.environ.get("PLACES_API_KEY")
 if places_api_key is None:
     raise ValueError("API key not found. Please set the PLACES_API_KEY environment variable.")
+
+places_client_key = os.environ.get("PLACES_CLIENT_KEY")
+if places_client_key is None:
+    raise ValueError("API key not found. Please set the PLACES_CLIENT_KEY environment variable.")
     
 gmaps = googlemaps.Client(key=places_api_key)
 
@@ -109,7 +113,7 @@ def config_views(app, db, bcrypt):
             if current_user.welcomed:
                 return redirect(url_for('home'))
             else:
-                return render_template('welcome.html', places_api_key=places_api_key)
+                return render_template('welcome.html', places_api_key=places_client_key)
             
         elif request.method == 'POST':
             profile_picture = request.files.get('profile_picture')
@@ -170,7 +174,7 @@ def config_views(app, db, bcrypt):
     @app.route('/hangouts/new')
     @login_required
     def new_hangout():
-        return render_template('new_hangout.html', places_api_key=places_api_key)
+        return render_template('new_hangout.html', places_api_key=places_client_key)
     
     @app.route('/hangouts/<hangout_id>')
     @login_required
