@@ -20,7 +20,8 @@ def add_test_user():
                 role='dev_test',
                 description='For developer testing purposes.',
                 welcomed=True,
-                verified=True
+                verified=True,
+                profile_picture='test.jpg',
             )
             db.session.add(dev_test_user)
             db.session.commit()
@@ -39,7 +40,8 @@ def add_test_user():
                     role='test',
                     description='For developer testing purposes.',
                     welcomed=False,
-                    verified=True
+                    verified=True,
+                    profile_picture='test.jpg',
             )
             db.session.add(user)
             db.session.commit()

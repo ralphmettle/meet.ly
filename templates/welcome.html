@@ -74,7 +74,7 @@
 {% block scripts %}
 <script src="{{ url_for('static', filename = 'js/welcome.js') }}"></script>
 <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsqXAw5paGfj1xv-SvrJgOcaowqEo9W6Y&libraries=places&callback=initAutocomplete"
+    src="https://maps.googleapis.com/maps/api/js?key={{ places_api_key }}&libraries=places&callback=initAutocomplete"
     async defer></script>
 {% endblock %}
 

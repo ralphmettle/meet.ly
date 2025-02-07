@@ -109,7 +109,7 @@ def config_views(app, db, bcrypt):
             if current_user.welcomed:
                 return redirect(url_for('home'))
             else:
-                return render_template('welcome.html')
+                return render_template('welcome.html', places_api_key=places_api_key)
             
         elif request.method == 'POST':
             profile_picture = request.files.get('profile_picture')
@@ -170,7 +170,7 @@ def config_views(app, db, bcrypt):
     @app.route('/hangouts/new')
     @login_required
     def new_hangout():
-        return render_template('new_hangout.html')
+        return render_template('new_hangout.html', places_api_key=places_api_key)
     
     @app.route('/hangouts/<hangout_id>')
     @login_required
