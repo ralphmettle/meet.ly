@@ -288,6 +288,9 @@ def config_views(app, db, bcrypt):
         if not os.path.exists(picture_folder):
             os.makedirs(picture_folder)
 
+        if profile_picture is None or profile_picture is "":
+            profile_picture = "profile-picture_default.jpg"
+        
         if profile_picture and get_extension(profile_picture.filename) in extensions:
             filename = create_filename(user.username, get_extension(profile_picture.filename))
             file_path = os.path.join(picture_folder, filename)
@@ -297,7 +300,7 @@ def config_views(app, db, bcrypt):
             
             user.profile_picture = filename
         else:
-            user.profile_picture = None
+            user.profile_picture = "profile-picture_default.jpg"
             flash('Invalid file type. Please upload a .jpg, .jpeg, or .png file.')
             
     def process_memory_image(image, memory_id, memory_data_id):
