@@ -11,7 +11,10 @@ from datetime import datetime
 from models import User, UserLocation, Friendship, Hangout, HangoutAttendee, Memory, MemoryData, AttendeeStatus
 from sqlalchemy import or_
 
-places_api_key = "AIzaSyDsqXAw5paGfj1xv-SvrJgOcaowqEo9W6Y"
+places_api_key = os.environ.get("PLACES_API_KEY")
+if places_api_key is None:
+    raise ValueError("API key not found. Please set the PLACES_API_KEY environment variable.")
+
 gmaps = googlemaps.Client(key=places_api_key)
 
 def config_views(app, db, bcrypt):
